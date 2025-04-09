@@ -1,0 +1,93 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    border: 5px solid black;
+}
+
+.sidebar {
+    width: 20%;
+    border-right: 5px solid black;
+    padding: 20px;
+}
+
+.sidebar h4 {
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.habit-input {
+    margin-bottom: 10px;
+}
+
+.habit-input input {
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.tracker {
+    flex-grow: 1;
+    padding: 20px;
+    position: relative;
+}
+
+.tracker h2 {
+    margin-bottom: 30px;
+}
+
+.bubble {
+    position: absolute;
+    border: 3px solid black;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Bubble positions and sizes (based on image) */
+.bubble.read-book {
+    width: 150px;
+    height: 150px;
+    top: 100px;
+    left: 150px;
+}
+
+.bubble.drink-water {
+    width: 220px;
+    height: 220px;
+    top: 40px;
+    right: 100px;
+}
+
+.bubble.fitness {
+    width: 100px;
+    height: 100px;
+    top: 220px;
+    left: 160px;
+}
+
+.bubble.podcast {
+    width: 90px;
+    height: 90px;
+    top: 230px;
+    left: 280px;
+}
+
+.bubble.extra {
+    width: 60px;
+    height: 60px;
+    top: 160px;
+    left: 320px;
+}
