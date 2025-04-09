@@ -1,6 +1,7 @@
-from flask import Flask
+from app import app
+from flask import render_template
 
-app = Flask(__name__)
-@app.rout('/')
+@app.route('/')
 def home():
-    return "Welcome to the Habit Tracker!"
+    print("🚀 / route hit")
+    return render_template('index.html')

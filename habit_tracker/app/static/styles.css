@@ -91,3 +91,59 @@ body {
     top: 160px;
     left: 320px;
 }
+
+.bubble.extra2 {
+    width: 60px;
+    height: 60px;
+    top: 300px;
+    left: 350px;
+}
+
+.bubble.extra3 {
+    width: 60px;
+    height: 60px;
+    top: 400px;
+    left: 300px;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #764d4d;
+    border-radius: 10px;
+}
+.calendar-container h3 {
+    margin-bottom: 10px;
+}
+
+.calendar {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 20px;
+    background: #f9f9f9;
+}
+
+.calendar .day {
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.calendar .day.header {
+    background: #007bff;
+    color: #fff;
+    font-weight: bold;
+}
+
+.calendar .day.today {
+    background: #ffeb3b;
+    color: #000;
+    border: 2px solid #fbc02d;
+}
