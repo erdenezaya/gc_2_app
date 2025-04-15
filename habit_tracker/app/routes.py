@@ -4,7 +4,7 @@ from flask import render_template
 @app.route('/')
 def home():
     print("🚀 / route hit")
-    return render_template('index.html')
+    return render_template('index.html', title='Agile Web Development - Group-gc-2')
 
 @app.route('/about')
 def about():

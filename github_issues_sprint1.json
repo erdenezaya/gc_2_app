@@ -1,0 +1,92 @@
+[
+  {
+    "title": "Initialize Flask project folder structure",
+    "body": "Set up the base folder structure for the Flask app with templates, static, and app folders.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "setup"
+    ]
+  },
+  {
+    "title": "Create base layout.html template with Bootstrap or Tailwind",
+    "body": "This will be the main base template that includes the navigation bar and loads CSS framework.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Create index.html using layout.html as base",
+    "body": "Design the homepage based on the prototype. This will extend layout.html and contain the main layout.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Add navigation bar with Home, About, Profile, Login, Sign Up",
+    "body": "Add a responsive navbar at the top with required links and buttons.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Build left sidebar: Today's Habit section",
+    "body": "Create input fields and '+' buttons for 5 habits: Read Book, Drink Water, Fitness, Podcast, Extra.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Center content: Habit Tracker visualization layout (static)",
+    "body": "Add placeholder circles of various sizes with habit names inside to simulate habit progress.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Right sidebar: Static calendar layout",
+    "body": "Create a table-based static calendar to show the current month with basic styling.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "static-ui"
+    ]
+  },
+  {
+    "title": "Apply global styling and responsive layout",
+    "body": "Ensure proper spacing, padding, and responsiveness across the three-column layout using the selected CSS framework.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "styling"
+    ]
+  },
+  {
+    "title": "Make layout mobile-responsive (optional)",
+    "body": "Ensure the habit tracker UI scales down for small screens using responsive CSS classes.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "optional"
+    ]
+  },
+  {
+    "title": "Use icons or colored tags for habit types (optional)",
+    "body": "Enhance the visual appeal of habit inputs by using icons or color-coded labels.",
+    "labels": [
+      "frontend",
+      "sprint1",
+      "optional"
+    ]
+  }
+]
