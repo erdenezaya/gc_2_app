@@ -21,6 +21,12 @@ def monthly():
 def yearly():
     return render_template('yearly.html', active_page='yearly')
 
+@app.route('/logout')
+def logout():
+    # TODO: clear user session data
+    return redirect(url_for('index'))  # redirect to homepage
+
+
 @app.route('/login', methods=['POST'])
 def login():
     email = request.form['email']
