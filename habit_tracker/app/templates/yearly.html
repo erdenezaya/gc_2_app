@@ -1,9 +1,169 @@
 {% extends "base.html" %}
-
 {% block title %}Yearly view{% endblock %}
-
 {% block content %}
+    <!-- Habit Tracker Yearly View -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='yearly.css') }}">
 
-<!-- add content here  -->
+    <div class="container">
+        <div class="header">
+            <div class="nav">
+                <div class="nav-left">
+                    <button class="nav-button">Dashboard</button>
+                </div>
+                <div class="nav-center">
+                    <button class="nav-button">Weekly</button>
+                    <button class="nav-button">Monthly</button>
+                    <button class="nav-button active">Yearly</button>
+                </div>
+                <div class="nav-right">
+                    <button class="nav-button">Logout</button>
+                </div>
+            </div>
+        </div>
 
+        <div class="year-toggle">
+            <button class="year-button active" data-year="2025">2025</button>
+            <button class="year-button" data-year="2024">2024</button>
+        </div>
+
+        <div class="habit-container">
+            <div class="habit-header">
+                <h2 class="habit-title">Wake up early</h2>
+                <button class="share-btn">Share</button>
+            </div>
+            <div class="contribution-grid">
+                <div class="grid-header">
+                    <span class="day-label"></span>
+                    <span class="month">Jan</span>
+                    <span class="month">Feb</span>
+                    <span class="month">Mar</span>
+                    <span class="month">Apr</span>
+                    <span class="month">May</span>
+                    <span class="month">Jun</span>
+                    <span class="month">Jul</span>
+                    <span class="month">Aug</span>
+                    <span class="month">Sep</span>
+                    <span class="month">Oct</span>
+                    <span class="month">Nov</span>
+                    <span class="month">Dec</span>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Mon</div>
+                    <div class="grid-cells" id="monday-grid"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Wed</div>
+                    <div class="grid-cells" id="wednesday-grid"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Fri</div>
+                    <div class="grid-cells" id="friday-grid"></div>
+                </div>
+                <div class="grid-footer">
+                    <div>Learn how we count contributions</div>
+                    <div class="intensity-legend">
+                        <span class="legend-label">Less</span>
+                        <div class="legend-cell" style="background-color: #ebedf0;"></div>
+                        <div class="legend-cell cell-level-1"></div>
+                        <div class="legend-cell cell-level-2"></div>
+                        <div class="legend-cell cell-level-3"></div>
+                        <div class="legend-cell cell-level-4"></div>
+                        <span class="legend-label">More</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="habit-container">
+            <h2 class="habit-title">Drink water</h2>
+            <div class="contribution-grid">
+                <div class="grid-header">
+                    <span class="day-label"></span>
+                    <span class="month">Jan</span>
+                    <span class="month">Feb</span>
+                    <span class="month">Mar</span>
+                    <span class="month">Apr</span>
+                    <span class="month">May</span>
+                    <span class="month">Jun</span>
+                    <span class="month">Jul</span>
+                    <span class="month">Aug</span>
+                    <span class="month">Sep</span>
+                    <span class="month">Oct</span>
+                    <span class="month">Nov</span>
+                    <span class="month">Dec</span>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Mon</div>
+                    <div class="grid-cells" id="monday-grid-water"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Wed</div>
+                    <div class="grid-cells" id="wednesday-grid-water"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Fri</div>
+                    <div class="grid-cells" id="friday-grid-water"></div>
+                </div>
+                <div class="grid-footer">
+                    <div>Learn how we count contributions</div>
+                    <div class="intensity-legend">
+                        <span class="legend-label">Less</span>
+                        <div class="legend-cell" style="background-color: #ebedf0;"></div>
+                        <div class="legend-cell cell-level-1"></div>
+                        <div class="legend-cell cell-level-2"></div>
+                        <div class="legend-cell cell-level-3"></div>
+                        <div class="legend-cell cell-level-4"></div>
+                        <span class="legend-label">More</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="habit-container">
+            <h2 class="habit-title">No take out</h2>
+            <div class="contribution-grid">
+                <div class="grid-header">
+                    <span class="day-label"></span>
+                    <span class="month">Jan</span>
+                    <span class="month">Feb</span>
+                    <span class="month">Mar</span>
+                    <span class="month">Apr</span>
+                    <span class="month">May</span>
+                    <span class="month">Jun</span>
+                    <span class="month">Jul</span>
+                    <span class="month">Aug</span>
+                    <span class="month">Sep</span>
+                    <span class="month">Oct</span>
+                    <span class="month">Nov</span>
+                    <span class="month">Dec</span>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Mon</div>
+                    <div class="grid-cells" id="monday-grid-takeout"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Wed</div>
+                    <div class="grid-cells" id="wednesday-grid-takeout"></div>
+                </div>
+                <div class="grid-row">
+                    <div class="day-label">Fri</div>
+                    <div class="grid-cells" id="friday-grid-takeout"></div>
+                </div>
+                <div class="grid-footer">
+                    <div>Learn how we count contributions</div>
+                    <div class="intensity-legend">
+                        <span class="legend-label">Less</span>
+                        <div class="legend-cell" style="background-color: #ebedf0;"></div>
+                        <div class="legend-cell cell-level-1"></div>
+                        <div class="legend-cell cell-level-2"></div>
+                        <div class="legend-cell cell-level-3"></div>
+                        <div class="legend-cell cell-level-4"></div>
+                        <span class="legend-label">More</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='yearly.js') }}"></script>
 {% endblock %}
