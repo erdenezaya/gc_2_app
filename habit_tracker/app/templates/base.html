@@ -10,7 +10,7 @@
   <!-- font awesome icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   {% block style %}{% endblock %}
 </head>
 <body>
@@ -27,12 +27,13 @@
         <button class="nav-btn {% if active_page == 'logout' %}btn-active{% endif %}">Logout</button>
         
       </div>
-  </nav>
+    </nav>
 
     {% block content %}
     <!-- Page-specific content goes here -->
     {% endblock %}
 
   </div>
+  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
 </body>
 </html>
