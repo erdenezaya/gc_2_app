@@ -147,3 +147,52 @@ body {
     color: #000;
     border: 2px solid #fbc02d;
 }
+
+/*Monthly.html CSS*/
+.nav-btn {
+    border: 1px solid #333;
+    background-color: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+  }
+  
+  .nav-btn.active {
+    background-color: peachpuff;
+    font-weight: bold;
+  }
+  
+  .habit-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  
+  .habit-table th,
+  .habit-table td {
+    border: 1px solid #ccc;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    padding: 0;
+  }
+  
+  .cell {
+    background-color: #f9f9f9;
+  }
+  
+  .cell.green {
+    background-color: #5cb85c;
+  }
+  
+  .cell.red {
+    background-color: #f06d6d;
+  }
+  
+  .cell.blue {
+    background-color: #4da3f0;
+  }
+  
+  .cell.purple {
+    background-color: #b27ef7;
+  }
+  

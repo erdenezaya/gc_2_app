@@ -13,3 +13,7 @@ def about():
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
+
+@app.route('/monthly')
+def monthly():
+    return render_template('monthly.html')
