@@ -1,0 +1,69 @@
+body {
+    background-color: #f8f9fa; /* Match Edit Habit page */
+    font-family: 'Inter', sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+    color: #000000;  /* Black */
+}
+
+.form-check {
+    background-color: #ffffff;
+    border: 2px dotted #cce5ff;
+    border-radius: 12px;
+    padding: 10px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease, background-color 0.2s ease;
+}
+
+.form-check:hover {
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    transform: scale(1.02);
+    background-color: #f0f8ff;
+    cursor: pointer;
+}
+
+/* Checkbox Styling */
+.form-check-input {
+    transform: scale(1.2);
+    margin-right: 10px;
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.form-check-input:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+/* Label Hover Effect */
+.form-check-label {
+    font-size: 1.1rem;
+    padding-left: 8px;
+    transition: color 0.2s ease;
+}
+
+.form-check:hover .form-check-label {
+    color: #007bff;
+}
+
+/* Buttons Interactivity */
+.btn-success, .btn-warning, .btn-danger {
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.btn-success:hover,
+.btn-warning:hover,
+.btn-danger:hover {
+    transform: scale(1.05);
+}
+
+.btn-lg {
+    padding: 10px 25px;
+    font-size: 1.2rem;
+}

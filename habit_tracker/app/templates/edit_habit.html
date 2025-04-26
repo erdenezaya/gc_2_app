@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Habit{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">✏️ Edit Habit</h2>
+    <form method="POST" class="p-4 border rounded bg-light shadow-sm">
+        <div class="form-group">
+            <label for="habit_name">Habit Name</label>
+            <input type="text" class="form-control" id="habit_name" name="habit_name" value="{{ habit.habit_name }}" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">💾 Save Changes</button>
+            <a href="{{ url_for('daily_habits') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

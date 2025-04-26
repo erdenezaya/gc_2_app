@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Daily Habits{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/daily.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">🌟 Daily Habits for {{ today }} 🌟</h1>
+
+    <form method="POST">
+        {% for habit in habits %}
+            <div class="form-check d-flex justify-content-between align-items-center p-2 mb-2 border rounded bg-light shadow-sm">
+                <div>
+                    <input type="checkbox" class="form-check-input" name="{{ habit.id }}" id="habit{{ habit.id }}"
+                           {% if records.get(habit.id) %}checked{% endif %}>
+                    <label class="form-check-label font-weight-bold" for="habit{{ habit.id }}">
+                        {{ habit.habit_name }}
+                    </label>
+                </div>
+                <div>
+                    <!-- Edit Button -->
+                    <a href="{{ url_for('edit_habit', habit_id=habit.id) }}" class="btn btn-sm btn-warning mr-1">✏️ Edit</a>
+                    <!-- Delete Button -->
+                    <a href="{{ url_for('delete_habit', habit_id=habit.id) }}" class="btn btn-sm btn-danger">🗑️ Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success btn-lg">💾 Save Habits ✅</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
