@@ -2,8 +2,43 @@
 
 {% block title %}Weekly view{% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/weekly.css') }}">
+{% endblock %}
+
 {% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Weekly Habit Overview</h1>
+    <h4 class="text-center text-muted">Data Range: April 15 - April 21</h4>
 
-<!-- add content here  -->
+    <!-- Donut Chart -->
+    <div class="row text-center mt-5">
+        <div class="col-md-3">
+            <canvas id="chartWakeUp"></canvas>
+            <p>Wake Up Early ✅</p>
+        </div>
+        <div class="col-md-3">
+            <canvas id="chartWater"></canvas>
+            <p>Drink Water ✅</p>
+        </div>
+        <div class="col-md-3">
+            <canvas id="chartMeditate"></canvas>
+            <p>Meditate 🔥</p>
+        </div>
+        <div class="col-md-3">
+            <canvas id="chartTakeout"></canvas>
+            <p>No Takeout ✅</p>
+        </div>
+    </div>
+    
 
+    <!-- Share Button -->
+    <div class="text-center mt-4">
+        <button class="btn btn-primary btn-lg share-btn">Share Insights 🚀</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/weekly.js') }}"></script>
 {% endblock %}

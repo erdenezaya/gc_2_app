@@ -10,7 +10,7 @@
   <!-- font awesome icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
   {% block style %}{% endblock %}
 </head>
 <body>
@@ -18,21 +18,40 @@
     <!-- Common navbar code -->
     <nav class="navbar">
       <div class="navbar-left">
-        <button class="nav-btn {% if active_page == 'dashboard' %}btn-active{% endif %}">Dashboard</button>
+        <a href="{{ url_for('main.dashboard')}}" class="nav-btn {% if active_page == 'dashboard' %}btn-active{% endif %}">Dashboard</a>
       </div>
       <div class="navbar-right">
-        <button class="nav-btn {% if active_page == 'weekly' %}btn-active{% endif %}">Weekly</button>
-        <button class="nav-btn {% if active_page == 'monthly' %}btn-active{% endif %}">Monthly</button>
-        <button class="nav-btn {% if active_page == 'yearly' %}btn-active{% endif %}">Yearly</button>
-        <button class="nav-btn {% if active_page == 'logout' %}btn-active{% endif %}">Logout</button>
+        <a href="{{ url_for('main.weekly') }}" class="text-dark nav-btn {% if active_page == 'weekly' %}btn-active{% endif %}">Weekly</a>
+        <a href="{{ url_for('main.monthly') }}" class="text-dark nav-btn {% if active_page == 'monthly' %}btn-active{% endif %}">Monthly</a>
+        <a href="{{ url_for('main.yearly') }}" class="text-dark nav-btn {% if active_page == 'yearly' %}btn-active{% endif %}">Yearly</a>
+        <a href="{{ url_for('auth.logout') }}" class="text-dark nav-btn {% if active_page == 'logout' %}btn-active{% endif %}">Logout</a>
         
       </div>
   </nav>
 
     {% block content %}
-    <!-- Page-specific content goes here -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="container mt-3">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} mb-2" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+  
     {% endblock %}
 
   </div>
+
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  {% block scripts %}{% endblock %}
+
+
+
 </body>
 </html>
