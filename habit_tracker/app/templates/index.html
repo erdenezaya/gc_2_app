@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <!-- font awesome icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <div class="outer-container">
@@ -27,9 +27,9 @@
     <div id="loginForm" class="form-popup">
       <div class="form-content">
         <button class="close-btn form-btn" onclick="closeLoginForm()">×</button>
-        <form method="POST" action="{{ url_for('login') }}">
+        <form method="POST" action="{{ url_for('auth.login') }}">
           <label>Username:</label>
-          <input type="text" name="email" required>
+          <input type="text" name="username" required>
           <label>Password:</label>
           <input type="password" name="password" required>
           <button type="submit" class="login-btn form-btn">Login</button>
@@ -47,7 +47,7 @@
         <div id="signupForm" class="form-popup">
           <div class="form-content">
             <button class="close-btn form-btn" onclick="closeSignupForm()">×</button>
-            <form method="POST" action="{{ url_for('signup') }}">
+            <form method="POST" action="{{ url_for('auth.signup') }}">
               <label>Username:</label>
               <input type="text" name="username" required>
               <label>Email:</label>
@@ -59,7 +59,7 @@
           </div>
   </div>
 
-  <script src="{{ url_for('static', filename='index.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
   
 </body>
 </html>

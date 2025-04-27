@@ -2,8 +2,11 @@
 
 {% block title %}Monthly view{% endblock %}
 
+{% block head_extra %}
+    <link rel="stylesheet"
+                href="{{ url_for('static', filename='css/monthlycalendar.css') }}">
+{% endblock %}
+
 {% block content %}
-
-<!-- add content here  -->
-
+    {% include "calendar_component.html" %}
 {% endblock %}

@@ -1,0 +1,38 @@
+/* Calendar cell sizing */
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    padding: 20px;
+}
+
+#calendar th,
+#calendar td {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#calendar th:first-child,
+#calendar td:first-child {
+    width: 160px; /* wider for habit names */
+}
+
+#calendar th {
+    font-weight: 600;
+}
+
+/* Make header arrows look clickable */
+.month-nav {
+    user-select: none;
+    cursor: pointer;
+}
+
+/* Share button pill style */
+#shareBtn {
+    border-radius: 9999px;
+    padding-inline: 1.5rem;
+    font-weight: 600;
+}
