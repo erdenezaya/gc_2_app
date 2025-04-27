@@ -22,9 +22,9 @@
                 </div>
                 <div>
                     <!-- Edit Button -->
-                    <a href="{{ url_for('edit_habit', habit_id=habit.id) }}" class="btn btn-sm btn-warning mr-1">✏️ Edit</a>
+                    <a href="{{ url_for('main.edit_habit', habit_id=habit.id) }}" class="btn btn-sm btn-warning mr-1">✏️ Edit</a>
                     <!-- Delete Button -->
-                    <a href="{{ url_for('delete_habit', habit_id=habit.id) }}" class="btn btn-sm btn-danger">🗑️ Delete</a>
+                    <a href="{{ url_for('main.delete_habit', habit_id=habit.id) }}" class="btn btn-sm btn-danger">🗑️ Delete</a>
                 </div>
             </div>
         {% endfor %}

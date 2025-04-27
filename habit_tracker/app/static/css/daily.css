@@ -1,0 +1,53 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Inter', sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+    color: #000000;
+}
+
+.form-check {
+    background-color: #ffffff;
+    border: 2px dotted #cce5ff;
+    border-radius: 12px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.form-check:hover {
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.form-check-label {
+    font-size: 1.1rem;
+    padding-left: 8px;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+    transform: scale(1.1);
+}
+
+.btn-success, .btn-warning, .btn-danger {
+    font-weight: 600;
+    transition: transform 0.2s ease;
+}
+
+.btn-success:hover,
+.btn-warning:hover,
+.btn-danger:hover {
+    transform: scale(1.05);
+}
+
+.btn-lg {
+    padding: 10px 25px;
+    font-size: 1.2rem;
+}
