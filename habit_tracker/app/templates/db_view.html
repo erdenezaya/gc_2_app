@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Database View{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📚 Database Overview</h1>
+
+    <h2>Users</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Username</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Habits</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Habit Name</th><th>User ID</th>
+        </tr>
+        {% for habit in habits %}
+        <tr>
+            <td>{{ habit.id }}</td>
+            <td>{{ habit.habit_name }}</td>
+            <td>{{ habit.user_id }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Habit Records</h2>
+    <table border="1">
+        <tr>
+            <th>ID</th><th>Habit ID</th><th>Date</th><th>Completed</th>
+        </tr>
+        {% for record in habit_records %}
+        <tr>
+            <td>{{ record.id }}</td>
+            <td>{{ record.habit_id }}</td>
+            <td>{{ record.date }}</td>
+            <td>{{ record.completed }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

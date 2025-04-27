@@ -87,3 +87,16 @@ def monthly():
 @login_required
 def yearly():
     return render_template("yearly.html", active_page="yearly")
+
+    # ------------------------------------------------------------------
+    # added a route to view the database
+from flask import render_template
+from app import db
+from app.models import User, Habit, HabitRecord  
+
+@main_bp.route('/db_view')
+def db_view():
+    users = User.query.all()
+    habits = Habit.query.all()
+    habit_records = HabitRecord.query.all()
+    return render_template('db_view.html', users=users, habits=habits, habit_records=habit_records)
