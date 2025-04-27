@@ -33,48 +33,6 @@
             <button class="add-habit-btn">+ Add Habit</button>
         </section>
 
-        <!-- Stats Section-->
-        <section>
-            <button class="share-btn">Share</button>
-            <h1>Stats</h1>
-            <div class="stats-line"><strong>Today:</strong> 4/4</div>
-            <div class="stats-line"><strong>Streak:</strong> 🔥 7 days</div>
-    
-            <div class="bar">
-            <div class="bar-label">Wake up early</div>
-            <div class="bar-track">
-                <div class="bar-fill green"></div>
-            </div>
-            <span>6/7</span>
-            </div>
-    
-            <div class="bar">
-            <div class="bar-label">Drink water</div>
-            <div class="bar-track">
-                <div class="bar-fill red"></div>
-            </div>
-            <span>7/7</span>
-            </div>
-    
-            <div class="bar">
-            <div class="bar-label">No takeout</div>
-            <div class="bar-track">
-                <div class="bar-fill blue"></div>
-            </div>
-            <span>7/7</span>
-            </div>
-    
-            <div class="bar">
-            <div class="bar-label">Meditate</div>
-            <div class="bar-track">
-                <div class="bar-fill purple"></div>
-            </div>
-            <span>6/7</span>
-            </div>
-        </section>
-        <div class="progress-container" style="flex-basis: 100%;">
-            <div class="progress-fill"></div>
-            <div class="progress-icon">🔥</div>
-          </div>
+        {% include "dashboard_stats.html" %}
     </div>
 {% endblock %}

@@ -1,0 +1,51 @@
+<!-- Stats Section-->
+<section>
+    <h1>Stats</h1>
+    <!-- Today's completion -->
+    <div class="stats-line">
+        {% if total_habits == 0 %}
+        <strong>Remember to add your first habit!</strong>
+        {% endif %} 
+        <strong>Today's:</strong> {{ today_done }}/{{ total_habits }} habits completed.
+        {% if today_done == 0 %}
+        <span class="stats-line" style="color: #FF786F;">No habits completed today</span>
+        {% elif today_done == total_habits %}
+        <span class="stats-line" style="color: #34BB61;">All habits completed today</span>
+        {% else %}
+        <span class="stats-line" style="color: #0D99FF;">Keep going! </span>
+        {% endif %}
+        <!-- Doughnut chart -->
+        <div style="width: 150px; height: 150px; margin-top: 10px;">
+            <canvas id="todayDoughnut"></canvas>
+        </div>           
+    </div>
+    <div class="stats-line"><strong>Streak:</strong> 🔥 {{ streak_days }} days</div>
+
+    <!-- bar chart  -->
+    {% for stat in habit_stats %}
+    <div class="bar">
+        <div class="bar-label">{{ stat.habit_name }}</div>
+        <div class="bar-track">
+        <div class="bar-fill" style="width: {{ stat.percentage }}%; background-color:
+            {% if loop.index == 1 %}#34BB61
+            {% elif loop.index == 2 %}#FF786F
+            {% elif loop.index == 3 %}#0D99FF
+            {% else %}#AF75F1{% endif %};"></div>
+        </div>
+        <span>{{ stat.completed_days }}/{{ stat.total_days }}</span>
+    </div>
+    {% endfor %}
+</section>
+
+<!-- Progress bar -->
+<div class="progress-container" style="flex-basis: 100%;">
+    <div class="progress-fill" style="width: {{ (streak_days / 30) * 100 if streak_days <= 30 else 100 }}%;"></div>
+    <div class="progress-icon" style="left: {{ (streak_days / 30) * 100 if streak_days <= 30 else 100 }}%;">🔥</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    window.todayDone = {{ today_done | default(0) }};
+    window.totalHabits = {{ total_habits | default(0) }};
+</script>    
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
