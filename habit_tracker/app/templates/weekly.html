@@ -1,44 +1,48 @@
 {% extends "base.html" %}
-
 {% block title %}Weekly view{% endblock %}
-
 {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/weekly.css') }}">
 {% endblock %}
-
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Weekly Habit Overview</h1>
-    <h4 class="text-center text-muted">Data Range: April 15 - April 21</h4>
-
+    <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
+      <h4 class="text-center text-muted">{{ date_range }}</h4>
+      <!-- Share Button -->
+    <form id="share-form" action="{{ url_for('main.share_snippet') }}" method="POST" onsubmit="return setReceiverUsername()">
+      <input type="hidden" id="receiver-username" name="receiver_username" value="">
+      <input type="hidden" name="message" value="Today: {{ today_completion }} habits completed. Streak: {{ streak }} days! 🚀">
+      <button type="button" class="nav-btn" data-toggle="modal" data-target="#usernameModal">Share</button>
+    </form>
+  </div>
+    
     <!-- Donut Chart -->
     <div class="row text-center mt-5">
-        <div class="col-md-3">
-            <canvas id="chartWakeUp"></canvas>
-            <p>Wake Up Early ✅</p>
+        {% for habit in habits %}
+        <div class="chart-container" style="width: 200px; margin: 20px;">
+          <canvas id="chart-{{ habit.id }}"></canvas>
+          <p style="text-align: center;">{{ habit.name }} ({{ habit.completed_days }}/{{ habit.total_days }})</p>
         </div>
-        <div class="col-md-3">
-            <canvas id="chartWater"></canvas>
-            <p>Drink Water ✅</p>
-        </div>
-        <div class="col-md-3">
-            <canvas id="chartMeditate"></canvas>
-            <p>Meditate 🔥</p>
-        </div>
-        <div class="col-md-3">
-            <canvas id="chartTakeout"></canvas>
-            <p>No Takeout ✅</p>
-        </div>
-    </div>
-    
-
-    <!-- Share Button -->
-    <div class="text-center mt-4">
-        <button class="btn btn-primary btn-lg share-btn">Share Insights 🚀</button>
+        {% endfor %}
     </div>
 </div>
-{% endblock %}
+    <!-- Modal for share button -->
+    {% include 'share_modal.html' %}
 
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/weekly.js') }}"></script>
+<!----------------------javascript -------------------------------->
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    window.habitChartData = [
+      {% for habit in habits %}
+      {
+        id: "{{ habit.id }}",
+        name: "{{ habit.name }}",
+        completed_days: {{ habit.completed_days }},
+        total_days: {{ habit.total_days }}
+      }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ];
+  </script>
+  <script src="{{ url_for('static', filename='js/weekly.js') }}"></script>
 {% endblock %}
