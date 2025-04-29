@@ -83,12 +83,18 @@ document.addEventListener("DOMContentLoaded", function () {
 })
 
 // Function to handle date selection
-    function handleDateSelection() {
-        const selectedDate = document.getElementById('date-picker').value;
-        if (selectedDate) {
-            alert(`You selected: ${selectedDate}`);
-            // Need to add logic here to handle the selected date
+function handleDateSelection() {
+    const selectedDate = document.getElementById('date-picker').value;
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+    if (selectedDate) {
+        if (selectedDate > today) {
+            alert('You cannot track habit in the future. Please choose a valid date.');
         } else {
-            alert('Please select a date.');
+            alert(`You selected: ${selectedDate}`);
+            // Add logic here to handle the selected date
         }
+    } else {
+        alert('Please select a date.');
     }
+}
