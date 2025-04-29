@@ -17,11 +17,15 @@ const doughnutChart = new Chart(ctx, {
     datasets: [{
       data: totalHabits === 0 ? [0, 1] : [todayDone, remaining],
       backgroundColor: ['#4CAF50', '#e0e0e0'],
-      borderWidth: 1
-    }]
+      borderColor: [
+        "black", 
+        "black"  
+      ],
+      borderWidth: 2 // Set border width to 2px
+      }]
   },
   options: {
-    cutout: '70%',
+    cutout: '65%',
     plugins: {
       legend: { display: false },
       tooltip: { enabled: false },

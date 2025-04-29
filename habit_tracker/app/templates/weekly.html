@@ -20,8 +20,8 @@
     <div class="row text-center mt-5">
         {% for habit in habits %}
         <div class="chart-container" style="width: 200px; margin: 20px;">
+          <p>{{ habit.name }}</p>
           <canvas id="chart-{{ habit.id }}"></canvas>
-          <p style="text-align: center;">{{ habit.name }} ({{ habit.completed_days }}/{{ habit.total_days }})</p>
         </div>
         {% endfor %}
     </div>
