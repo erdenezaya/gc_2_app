@@ -51,7 +51,7 @@ def login():
 
         if user and user.check_password(password):
             login_user(user)
-            flash('Welcome!', 'success')
+            flash('Login successful!', 'success')
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.dashboard'))
         else:
