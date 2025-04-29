@@ -4,12 +4,11 @@ from app import db
 from app.models import Habit, HabitRecord, SharedSnippet, User
 from datetime import datetime, timedelta
 from . import main_bp
-<<<<<<< HEAD
-=======
+
 from .controller import create_default_habits, get_habit_color, calculate_streak, get_weekly_completion
 from app.config import COLOR_PALETTE, COLOR_GRADIENTS, PROGRESS_BAR_GRADIENT
 
->>>>>>> 8a4e96a (Add color palette and gradients in config.py for habit tracking visuals;)
+
 
 # ------------------------------------------------------------------
 # Public landing page
@@ -279,6 +278,16 @@ def monthly():
     current_date = datetime.today().isoformat()
     streak = calculate_streak(current_user.id)
 
+
+    # TEMP: Fake data for habit completions — this should be replaced with real DB queries later.
+    habit_completions = [
+        {"habit_id": 1, "date": "2025-04-01", "status": "done"},
+        {"habit_id": 1, "date": "2025-04-02", "status": "done"},
+        {"habit_id": 2, "date": "2025-04-01", "status": "missed"},
+        {"habit_id": 2, "date": "2025-04-02", "status": "done"}
+    ]
+
+
     return render_template(
         "monthly.html",
         active_page="monthly",
@@ -289,6 +298,7 @@ def monthly():
         current_date=current_date
 
         progress_gradient=PROGRESS_BAR_GRADIENT,
+
 
     )
 

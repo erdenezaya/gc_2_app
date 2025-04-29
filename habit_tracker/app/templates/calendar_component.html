@@ -1,5 +1,5 @@
 <!-- templates/calendar_component.html -->
-<<<<<<< Updated upstream
+
 <div class="calendar my-4">
   <!-- Month navigator & share -->
   <div class="month-navigation">
@@ -25,7 +25,7 @@
       </div>
   </div>
 </div>
-=======
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/monthlycalendar.css') }}">
 
 <div class="calendar my-4">
@@ -54,4 +54,30 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
->>>>>>> Stashed changes
+
+<div class="calendar my-4">
+  <!-- Month navigator & share -->
+  <div class="month-navigation">
+    <span id="prevMonth" class="month-nav">&lt;</span>
+    <h2 id="monthLabel" class="m-0"></h2>
+    <span id="nextMonth" class="month-nav">&gt;</span>
+    <button id="shareBtn" class="btn btn-outline-dark">Share</button>
+  </div>
+
+
+  <!-- Calendar table -->
+  <div class="table-responsive">
+    <table id="calendar" class="table table-bordered align-middle text-center mb-0"></table>
+  </div>
+
+  <!-- Color Legend -->
+  <div class="legend">
+      <div class="legend-item">
+          <div class="legend-color" style="background:#4caf50;"></div> Done
+      </div>
+      <div class="legend-item">
+          <div class="legend-color" style="background:#f8d7da;"></div> Missed
+      </div>
+  </div>
+</div>
+

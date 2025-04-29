@@ -87,16 +87,10 @@ function renderCalendar() {
         cell.addEventListener("click", () => {
             const key = cell.dataset.key;
             const hIdx = parseInt(cell.dataset.habit, 10);
-<<<<<<< Updated upstream
             const habitColor = habits[hIdx].color || "#ccc";
-
-            const wasDone = cell.style.backgroundColor !== "";
-=======
-            const habitColor = habits[hIdx].color;
-        
+    
             const wasDone = cell.classList.contains('completed');
-            
->>>>>>> Stashed changes
+    
             if (wasDone) {
                 cell.style.backgroundColor = "";
                 cell.classList.remove('completed');
@@ -108,7 +102,7 @@ function renderCalendar() {
             }
         });
     });
-}
+    
 
 /* ------------------ Navigation buttons ---------------- */
 document.getElementById("prevMonth").addEventListener("click", () => {
