@@ -8,7 +8,12 @@
         <div class="year-toggle">
             <button class="year-button active" data-year="2025">2025</button>
             <button class="year-button" data-year="2024">2024</button>
-            <button class="share-btn">Share</button>
+            <!-- Share Button -->
+            <form id="share-form" action="{{ url_for('main.share_snippet') }}" method="POST" onsubmit="return setReceiverUsername()">
+                <input type="hidden" id="receiver-username" name="receiver_username" value="">
+                <input type="hidden" name="message" value="Today: {{ today_completion }} habits completed. Streak: {{ streak }} days! 🚀">
+                <button type="button" class="nav-btn" data-toggle="modal" data-target="#usernameModal">Share</button>
+            </form>
         </div>
 
         {% for habit in habits %}
@@ -31,5 +36,7 @@
         </div>
         {% endfor %}
     </div>
+    <!-- Modal for share button -->
+    {% include 'share_modal.html' %}
     <script src="{{ url_for('static', filename='js/yearly.js') }}"></script>
 {% endblock %}

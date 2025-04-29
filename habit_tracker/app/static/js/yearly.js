@@ -222,7 +222,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeGrids(defaultYear);
     
     // Share button functionality
-    document.querySelector('.share-btn').addEventListener('click', function() {
-        alert('Share your yearly progress');
-    });
+    function submitShareForm() {
+        const username = document.getElementById('modal-username').value;
+        console.log("User to receive stats:", username);
+        if (username) { // Check if username is not empty
+            document.getElementById('receiver-username').value = username;
+            document.getElementById('share-form').submit(); // Submit the form
+        } else {
+            alert("Please enter a username.");
+        }
+    };
 });
