@@ -16,7 +16,12 @@
         <!-- Daily habit section -->
         <section id="daily-habits">
             <h1>Daily Habits</h1>
-            
+            <!-- Add a "Select a Date" button -->
+            <div class="date-picker-container" style="margin-top: 20px;">
+                <label for="date-picker" style="font-weight: bold; margin-right: 10px;">Select a Date:</label>
+                <input type="date" id="date-picker" class="form-control" style="display: inline-block; width: auto;">
+                <button type="button" class="btn btn-primary" onclick="handleDateSelection()">go</button>
+            </div>
             <!-- Dynamic habits list -->
             {% for habit in habits %}
             <div class="habit-item">
