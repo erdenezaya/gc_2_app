@@ -2,13 +2,20 @@
 
 {% block title %}Monthly Habit Tracker{% endblock %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/monthlycalendar.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="calendar-container">
-  <h2>April 2025 Habit Calendar</h2>
-  <div class="calendar" id="calendar"></div>
-</div>
+{% include "calendar_component.html" %}
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
-  {% endblock %}
+<script>
+  const habits = {{ habits | tojson }};
+</script>
+<script>
+  const habitCompletions = {{ habit_completions | default([]) |  tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
+{% endblock %}

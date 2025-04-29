@@ -1,38 +1,100 @@
-/* Calendar cell sizing */
+/* Calendar container */
 .calendar {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
+    max-width: 1200px;
+    margin: 2rem auto;
     padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
 }
 
+/* Month navigation */
+.month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.month-navigation span {
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 8px;
+}
+
+.month-navigation span:hover {
+    background-color: #e2e6ea;
+    color: #000;
+}
+
+.month-navigation h2 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Calendar Table */
+#calendar {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+}
+
+/* Table Header and Cells */
 #calendar th,
 #calendar td {
     width: 34px;
     height: 34px;
-    padding: 0;
+    padding: 4px;
     text-align: center;
     vertical-align: middle;
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
 }
 
+/* Habit name column wider */
 #calendar th:first-child,
 #calendar td:first-child {
-    width: 160px; /* wider for habit names */
+    width: 180px;
+    background-color: #f8f9fa;
+    font-weight: bold;
 }
 
-#calendar th {
-    font-weight: 600;
+/* Hover effect */
+#calendar td:hover {
+    background-color: #e2e6ea;
 }
 
-/* Make header arrows look clickable */
-.month-nav {
-    user-select: none;
-    cursor: pointer;
-}
-
-/* Share button pill style */
+/* Share button */
 #shareBtn {
     border-radius: 9999px;
     padding-inline: 1.5rem;
     font-weight: 600;
+}
+
+/* Legend Section */
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 25px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
 }

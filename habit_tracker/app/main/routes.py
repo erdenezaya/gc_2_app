@@ -235,12 +235,23 @@ def weekly():
 def monthly():
     """Render the monthly habits view"""
     # Get current user's habits
-    habits = Habit.query.filter_by(user_id=current_user.id).all()
+    habits = [
+        {'id': 1, 'name': 'Drink Water', 'color': '#4caf50'},
+        {'id': 2, 'name': 'Meditate', 'color': '#2196f3'}
+    ]
+
+    habit_completions = [
+        {"habit_id": 1, "date": "2025-04-01", "status": "done"},
+        {"habit_id": 1, "date": "2025-04-02", "status": "done"},
+        {"habit_id": 2, "date": "2025-04-01", "status": "missed"},
+        {"habit_id": 2, "date": "2025-04-02", "status": "done"}
+    ]
     
     return render_template(
         "monthly.html",
         active_page="monthly",
-        habits=habits
+        habits=habits,
+        habit_completions=habit_completions
     )
 
 @main_bp.route("/yearly")

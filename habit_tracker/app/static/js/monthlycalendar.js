@@ -1,10 +1,4 @@
 /* ----------------------- CONFIG ----------------------- */
-const habits = [
-    { name: "Wake up early", color: "#4caf50" },
-    { name: "Drink water", color: "#f44336" },
-    { name: "No takeout", color: "#2196f3" },
-    { name: "Meditate", color: "#9c27b0" },
-];
 
 /* ----------------------- HELPERS ---------------------- */
 const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
@@ -59,8 +53,26 @@ function renderCalendar() {
         tbodyHtml += `<tr><th class="text-start">${habit.name}</th>`;
         for (let day = 1; day <= totalDays; day++) {
             const key = makeKey(year, month + 1, day, hIdx);
-            const done = localStorage.getItem(key) === "1";
-            const style = done ? `style="background:${habit.color};"` : "";
+
+            const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
+
+            // ✅ Correct matching
+            const completion = habitCompletions.find(hc => hc.habit_id === habit.id && hc.date === dateStr);
+
+            // ✅ Debug only if a match is found
+            if (completion) {
+                console.log(`✅ Found Completion: Habit [${habit.name}] on [${dateStr}] Status: [${completion.status}]`);
+            }
+
+            let style = "";
+
+            if (completion) {
+                if (completion.status === "done") {
+                    style = `style="background:${habit.color};"`;  // Completed habit ➔ use habit's color
+                } else if (completion.status === "missed") {
+                    style = `style="background:#f8d7da;"`; // Missed habit ➔ light red color
+                }
+            }
 
             tbodyHtml += `<td data-key="${key}" data-habit="${hIdx}" ${style}></td>`;
         }
@@ -75,7 +87,7 @@ function renderCalendar() {
         cell.addEventListener("click", () => {
             const key = cell.dataset.key;
             const hIdx = parseInt(cell.dataset.habit, 10);
-            const habitColor = habits[hIdx].color;
+            const habitColor = habits[hIdx].color || "#ccc";
 
             const wasDone = cell.style.backgroundColor !== "";
             if (wasDone) {
