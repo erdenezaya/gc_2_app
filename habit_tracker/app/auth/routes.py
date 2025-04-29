@@ -47,7 +47,7 @@ def login():
         user = User.query.filter_by(username=user_name).first()
         if user and user.check_password(password):
             login_user(user)
-            flash('Login successful!')
+            flash('Login successful!', 'success')
             next_page = request.args.get('next')
             return redirect(url_for('main.dashboard'))
         flash('Invalid username or password')

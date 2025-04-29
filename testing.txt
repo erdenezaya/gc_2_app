@@ -1,0 +1,40 @@
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+_______________________ test_login_success_sets_session _______________________
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x00000239E35B8E00>
+
+    def test_login_success_sets_session(client, make_user):
+        make_user()  # create Alice once
+        resp = client.post(
+            "/login",
+            data={"username": "alice", "password": "secret"},
+            follow_redirects=True,
+        )
+>       assert b"Logged in successfully" in resp.data
+E       assert b'Logged in successfully' in b'<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-w...       <div class="progress-icon">\xf0\x9f\x94\xa5</div>\n          </div>\n    </div>\n\n\n  </div>\n</body>\n</html>'
+E        +  where b'<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-w...       <div class="progress-icon">\xf0\x9f\x94\xa5</div>\n          </div>\n    </div>\n\n\n  </div>\n</body>\n</html>' = <WrapperTestResponse 3630 bytes [200 OK]>.data
+
+habit_tracker\tests\test_auth.py:8: AssertionError
+__________________________ test_login_wrong_password __________________________
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x00000239E35E9260>
+
+    def test_login_wrong_password(client, make_user):
+        make_user()
+        resp = client.post(
+            "/login",
+            data={"username": "alice", "password": "badpass"},
+            follow_redirects=True,
+        )
+>       assert b"Invalid" in resp.data
+E       assert b'Invalid' in b'<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-w...       <div class="progress-icon">\xf0\x9f\x94\xa5</div>\n          </div>\n    </div>\n\n\n  </div>\n</body>\n</html>'
+E        +  where b'<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-w...       <div class="progress-icon">\xf0\x9f\x94\xa5</div>\n          </div>\n    </div>\n\n\n  </div>\n</body>\n</html>' = <WrapperTestResponse 3630 bytes [200 OK]>.data
+
+habit_tracker\tests\test_auth.py:21: AssertionError
+=========================== short test summary info ===========================
+FAILED habit_tracker/tests/test_auth.py::test_login_success_sets_session - as...
+FAILED habit_tracker/tests/test_auth.py::test_login_wrong_password - assert b...
+2 failed, 1 passed in 1.27s
