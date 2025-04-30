@@ -44,13 +44,11 @@
                 <label for="new-username">New Username:</label>
                 <input type="text" id="new-username" name="new_username" required>
                 <button type="submit">Update Username</button>
-                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% with messages = get_flashed_messages(with_categories=true, category_filter=['profile', 'profile_error']) %}
                     {% if messages %}
                         <ul class="flashes">
                             {% for category, message in messages %}
-                                {% if category in ['profile', 'profile_error'] %}
-                                    <li class="{{ category }}">{{ message }}</li>
-                                {% endif %}
+                                <li class="{{ category }}">{{ message }}</li>
                             {% endfor %}
                         </ul>
                     {% endif %}

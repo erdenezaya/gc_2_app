@@ -15,22 +15,22 @@ def signup():
         password = request.form['password']
 
         if not username or not email or not password:
-            flash('All fields are required')
+            flash('All fields are required','signup')
             return redirect(url_for('auth.signup'))
         
         if User.query.filter_by(username=username).first():
-            flash('Username already exists')
+            flash('Username already exists','signup')
             return redirect(url_for('auth.signup'))
         
         if User.query.filter_by(email=email).first():
-            flash('Email already exists')
+            flash('Email already exists','signup')
             return redirect(url_for('auth.signup'))
         
         user = User(username=username, email=email)
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
-        flash('Registration successful! You can now log in.')
+        flash('Registration successful! You can now log in.', 'signup')
         return redirect(url_for('auth.signup'))
     
     return render_template('index.html')
@@ -46,16 +46,16 @@ def login():
 
         user = User.query.filter_by(username=user_name).first()
         if not user:
-            flash('User is not registered. Please sign up first.','danger')
+            flash('User is not registered. Please sign up first.','auth_error')
             return redirect(url_for('main.home', show_login=True))
 
         if user and user.check_password(password):
             login_user(user)
-            flash('Login successful!', 'success')
+            flash('Login successful!', 'auth_success')
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.dashboard'))
         else:
-            flash('Invalid username or password','danger')
+            flash('Invalid username or password','auth_error')
             return redirect(url_for('main.home', show_login=True))
     return render_template('index.html')
 

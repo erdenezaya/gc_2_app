@@ -37,7 +37,7 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
                 {% for category, message in messages %}
-                  {% if category in ['danger', 'success', 'info', 'logout'] %}
+                  {% if category in ['auth_error', 'auth_success'] %}
                     <div class="alert alert-{{ category }} mt-2" role="alert">
                       {{ message }}
                     </div>

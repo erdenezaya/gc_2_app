@@ -50,12 +50,37 @@ def session(db):
 # ------------------------------------------------------------------  
 # Factory helper: make_user(...)
 # ------------------------------------------------------------------
+# --------------------  Factory helper  --------------------
 @pytest.fixture
-def make_user(db):
-    def _factory(username="alice", email="a@ex.com", pwd="secret"):
-        u = User(username=username, email=email)
-        u.set_password(pwd)
-        db.session.add(u)
-        db.session.commit()
-        return u
+def make_user():
+    """
+    Create (or fetch) a user inside the current test transaction.
+
+    Usage:
+        user = make_user(username="bob", password="pwd123")
+    """
+    def _factory(
+        username: str = "alice",
+        email: str | None = None,
+        password: str = "secret",
+        **extra,
+    ) -> User:
+        if email is None:
+            email = f"{username}@test.com"
+
+        # if the user already exists in this test’s transaction, reuse it
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return user
+
+        user = User(username=username, email=email, **extra)
+        user.set_password(password)
+        # set timestamps if your model has them and default=None
+        if not getattr(user, "created_at", None):
+            user.created_at = datetime.utcnow()
+        db.session.add(user)
+        db.session.flush()      # flush but keep inside current transaction
+        return user
+
     return _factory
+
