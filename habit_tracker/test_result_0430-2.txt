@@ -1,0 +1,31 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: C:\Users\Zaya\Desktop\UWA-Zaya\2025\Course\Units\CITS5505\Assignment\5505-Group-gc2\gc_2_app
+configfile: pytest.ini
+plugins: anyio-4.4.0, flask-1.3.0
+collected 4 items
+
+tests\test_auth.py F...                                                  [100%]
+
+================================== FAILURES ===================================
+_______________________ test_login_success_sets_session _______________________
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x00000217590939C0>
+
+    def test_login_success_sets_session(client, make_user):
+        make_user(username="alice", password="secret")
+        client.post(
+            "/login",
+            data={"username": "alice", "password": "secret"},
+            follow_redirects=True,
+        )
+        # Don’t check the flash text—just ensure the user is logged in
+        with client.session_transaction() as sess:
+>           assert "_user_id" in sess
+E           AssertionError: assert '_user_id' in <SecureCookieSession {}>
+
+tests\test_auth.py:13: AssertionError
+=========================== short test summary info ===========================
+FAILED tests\test_auth.py::test_login_success_sets_session - AssertionError: ...
+========================= 1 failed, 3 passed in 0.47s =========================
