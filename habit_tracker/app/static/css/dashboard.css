@@ -101,34 +101,6 @@ h1 {
 .blue { background-color: #0D99FF; width: 100%; }
 .purple { background-color: #AF75F1; width: 86%; }
 
-/* Steak progress bar */
-.progress-container {
-    width: calc(100% - 3rem); /* Full width minus the gap on both sides */
-    height: 20px;
-    background-color: #ddd;
-    border: 2px solid black;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-    order: 2;            /* Makes sure it goes after the two boxes */
-    position: relative; /* Position it relative to the outer-container */    
-    bottom: 0.5rem;       /* Add a gap on the bottom */
-    margin:0 1.5rem;
-}
-
-.progress-fill {
-    width: 25%;
-    height: 20px;
-    background-color: #f7e17c;
-    display: block;
-    }
-    
-
-.progress-icon {
-    position: absolute;
-    top: -22px;
-    left: 25%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    }
 
 /* Responsive styles */
 @media (max-width: 1300px) {
@@ -148,13 +120,5 @@ h1 {
     section{
         max-width:400px;
         margin:0 50px;
-        }
-    }
-
-@media (max-width: 862px) {
-    .progress-container{
-        margin-top:2rem;
-        width: 70%; /* Full width minus the gap on both sides */
-        position: relative;
         }
     }

@@ -75,10 +75,46 @@ body {
     .share-btn {
         float:right;
     }
-  
+  /* Steak progress bar */
+.progress-container {
+    width: calc(100% - 6rem); /* Full width minus the gap on both sides */
+    height: 20px;
+    background-color: #ddd;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+    order: 2;            /* Makes sure it goes after the two boxes */
+    position: relative; /* Position it relative to the outer-container */    
+    bottom: 0.5rem;       /* Add a gap on the bottom */
+    margin:0 1.5rem;
+}
+
+.progress-fill {
+    width: 25%;
+    height: 20px;
+    background-color: #f7e17c;
+    display: block;
+    }
+    
+
+.progress-icon {
+    position: absolute;
+    top: -22px;
+    left: 25%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    }
+
   /* Responsive Adjustments */
   @media (max-width: 862px) {
     .navbar-right {
         display: none; /* Hide the right side of the navbar */
     }
 }
+
+@media (max-width: 862px) {
+    .progress-container{
+        margin-top:2rem;
+        width: 70%; /* Full width minus the gap on both sides */
+        position: relative;
+        }
+    }

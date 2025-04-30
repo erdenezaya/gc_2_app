@@ -143,6 +143,9 @@ def dashboard():
     habit_data = []
     total_habits = len(habits)
     completed_count = 0
+
+    # Calculate streak
+    streak = calculate_streak(current_user.id)
     
     # For each habit, get completion status and statistics
     for habit in habits:
@@ -157,38 +160,40 @@ def dashboard():
         if is_completed:
             completed_count += 1
         
-        # Calculate streak
-        streak = calculate_streak(habit.id)
-        
-        # Calculate weekly completion (e.g., "6/7")
-        completed_days, total_days = get_weekly_completion(habit.id)
-        completion_rate = f"{completed_days}/{total_days}"
-        
-        # Get color class based on habit name
-        color_class = get_habit_color(habit.habit_name)
-        
-        # Add to habit data list
-        habit_data.append({
-            "id": habit.id,
-            "name": habit.habit_name,
-            "completed": is_completed,
-            "streak": streak,
-            "completion_rate": completion_rate,
-            "completion_percent": (completed_days / total_days * 100) if total_days > 0 else 0,
-            "color_class": color_class
-        })
-    
-    # Calculate max streak for progress bar
-    max_streak = max([h["streak"] for h in habit_data]) if habit_data else 0
-    
-    return render_template(
-        "dashboard.html",
-        active_page="dashboard",
-        habits=habit_data,
-        completed_count=completed_count,
-        total_habits=total_habits,
-        max_streak=max_streak
-    )
+            # Calculate streak
+    streak = calculate_streak(habit.id)
+
+    # Calculate weekly completion (e.g., "6/7")
+    completed_days, total_days = get_weekly_completion(habit.id)
+    completion_rate = f"{completed_days}/{total_days}"
+
+    # Get color class based on habit name
+    color_class = get_habit_color(habit.habit_name)
+
+    # Add to habit data list
+    habit_data.append({
+        "id": habit.id,
+        "name": habit.habit_name,
+        "completed": is_completed,
+        "completion_rate": completion_rate,
+        "completion_percent": (completed_days / total_days * 100) if total_days > 0 else 0,
+        "color_class": color_class,
+        "streak": streak
+    })
+
+# Calculate max streak for progress bar
+max_streak = max([h["streak"] for h in habit_data]) if habit_data else 0
+
+return render_template(
+    "dashboard.html",
+    active_page="dashboard",
+    habits=habit_data,
+    completed_count=completed_count,
+    total_habits=total_habits,
+    max_streak=max_streak,
+    streak=streak
+)
+
 
 @main_bp.route("/weekly")
 @login_required
@@ -206,6 +211,10 @@ def weekly():
     
     # Initialize habits data for the template
     habits_data = []
+
+    # Calculate streak
+    streak = calculate_streak(current_user.id)
+
     for habit in habits:
         # Get weekly completion data
         completed_days, total_days = get_weekly_completion(habit.id)
@@ -222,23 +231,29 @@ def weekly():
             "total_days": total_days,
             "has_streak": has_streak
         })
-    
     return render_template(
         "weekly.html",
         active_page="weekly",
         habits=habits_data,
-        date_range=date_range
+        date_range=date_range,
+        streak=streak,
     )
 
 @main_bp.route("/monthly")
 @login_required
 def monthly():
     """Render the monthly habits view"""
-    # Get current user's habits
-    habits = [
-        {'id': 1, 'name': 'Drink Water', 'color': '#4caf50'},
-        {'id': 2, 'name': 'Meditate', 'color': '#2196f3'}
-    ]
+    habit_objs = Habit.query.filter_by(user_id=current_user.id).all()
+
+    colors = ["#48bb78", "#4299e1", "#9f7aea", "#ed8936", "#f6ad55"]
+
+    habits = []
+    for idx, h in enumerate(habit_objs):
+        habits.append({
+            "id": h.id,
+            "name": h.habit_name,
+            "color": colors[idx % len(colors)]
+        })
 
     habit_completions = [
         {"habit_id": 1, "date": "2025-04-01", "status": "done"},
@@ -246,13 +261,19 @@ def monthly():
         {"habit_id": 2, "date": "2025-04-01", "status": "missed"},
         {"habit_id": 2, "date": "2025-04-02", "status": "done"}
     ]
-    
+
+    current_date = datetime.today().isoformat()
+    streak = calculate_streak(current_user.id)
+
     return render_template(
         "monthly.html",
         active_page="monthly",
         habits=habits,
-        habit_completions=habit_completions
+        streak=streak,
+        habit_completions=habit_completions,
+        current_date=current_date
     )
+
 
 @main_bp.route("/yearly")
 @login_required
@@ -260,11 +281,15 @@ def yearly():
     """Render the yearly habits view"""
     # Get current user's habits
     habits = Habit.query.filter_by(user_id=current_user.id).all()
+
+    # Calculate streak
+    streak = calculate_streak(current_user.id)
     
     return render_template(
         "yearly.html",
         active_page="yearly",
-        habits=habits
+        habits=habits,
+        streak=streak,
     )
 
 # ------------------------------------------------------------------
