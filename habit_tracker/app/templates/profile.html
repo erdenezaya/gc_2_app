@@ -59,15 +59,16 @@
                 <input type="email" id="new-email" name="new_email" required>
                 <button type="submit">Update Email</button>
                 
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <ul class="flashes">
-                        {% for category, message in messages %}
-                            <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
+                {% with messages = get_flashed_messages(with_categories=true, category_filter=['profile', 'profile_error']) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
             </form>
             <form action="/update_password" method="POST">
                 <label for="current-password">Current Password:</label>
@@ -75,15 +76,15 @@
                 <label for="new-password">New Password:</label>
                 <input type="password" id="new-password" name="new_password" required>
                 <button type="submit">Update Password</button>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <ul class="flashes">
-                        {% for category, message in messages %}
-                            <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
+                {% with messages = get_flashed_messages(with_categories=true, category_filter=['profile', 'profile_error']) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
             </form>
         </section>
 

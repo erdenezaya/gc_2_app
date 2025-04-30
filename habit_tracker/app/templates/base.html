@@ -63,4 +63,14 @@
 {% include 'inbox_modal.html' %}
 
 </body>
+{% with flashes = get_flashed_messages(with_categories=true) %}
+  {% if flashes %}
+    <ul class="flashes">
+      {% for category, message in flashes %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
 </html>
