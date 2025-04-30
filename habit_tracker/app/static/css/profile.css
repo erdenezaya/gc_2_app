@@ -54,7 +54,7 @@ form input[type="text"],
 form input[type="email"],
 form input[type="password"] {
     padding: 0.4rem 0.6rem;
-    width: 200px;
+    width: 180px;
     border: 1px solid #aaa;
     border-radius: 8px;
     font-size: 1rem;
