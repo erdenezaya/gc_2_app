@@ -84,14 +84,15 @@ body {
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
     order: 2;            /* Makes sure it goes after the two boxes */
     position: relative; /* Position it relative to the outer-container */    
-    bottom: 0.5rem;       /* Add a gap on the bottom */
+    top: 5px;       /* Add a gap on the bottom */
     margin:0 1.5rem;
 }
 
 .progress-fill {
     width: 25%;
-    height: 20px;
-    background-color: #f7e17c;
+    height: 16px;
+    background-image: linear-gradient(90deg, #d4ff53, #0D99FF);
+    transition: width 0.5s ease;
     display: block;
     }
     
