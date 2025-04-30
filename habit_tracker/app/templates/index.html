@@ -37,14 +37,16 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
                 {% for category, message in messages %}
-                  <div class="alert alert-{{ category }} mt-2" role="alert">
-                    {{ message }}
-                  </div>
+                  {% if category in ['danger', 'success', 'info', 'logout'] %}
+                    <div class="alert alert-{{ category }} mt-2" role="alert">
+                      {{ message }}
+                    </div>
+                  {% endif %}
                 {% endfor %}
               {% endif %}
             {% endwith %}
           {% endif %}
-          
+
           <button type="submit" class="login-btn form-btn">Login</button>
         </form>
       </div>

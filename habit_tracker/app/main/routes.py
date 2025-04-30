@@ -569,16 +569,16 @@ def update_password():
     new_password = request.form.get("new_password")
     
     if not current_password or not new_password:
-        flash("All fields are required", "danger")
+        flash("All fields are required", "profile_error")
         return redirect(url_for("main.profile"))
     
     # Verify current password
     if not current_user.check_password(current_password):
-        flash("Current password is incorrect", "danger")
+        flash("Current password is incorrect", "profile_error")
         return redirect(url_for("main.profile"))
     
     # Update password
     current_user.set_password(new_password)
     db.session.commit()
-    flash("Password updated successfully!", "success")
+    flash("Password updated successfully!", "profile")
     return redirect(url_for("main.profile"))
