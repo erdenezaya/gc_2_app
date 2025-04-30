@@ -23,6 +23,7 @@
     <nav class="navbar">
       <div class="navbar-left">
         <a href="{{ url_for('main.dashboard')}}" class="nav-btn {% if active_page == 'dashboard' %}btn-active{% endif %}">Dashboard</a>
+        <a href="{{ url_for('main.profile')}}" class="nav-btn {% if active_page == 'profile' %}btn-active{% endif %}">Profile</a>
       </div>
       <div class="navbar-right">
         <button class="nav-btn" data-toggle="modal" data-target="#inboxModal">Inbox 📨</button>

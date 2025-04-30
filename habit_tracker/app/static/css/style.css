@@ -94,6 +94,8 @@ body {
   to { 
     background: rgba(0, 0, 0, 0.3); /* semi-transparent background */
     backdrop-filter: blur(2px); /* Add blur effect */
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
 
@@ -166,4 +168,13 @@ body {
   text-align: center;
   line-height: 25px;
   cursor: pointer;
+}
+
+/* Profile */
+
+.profile-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }

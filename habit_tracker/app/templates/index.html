@@ -32,6 +32,19 @@
           <input type="text" name="username" required>
           <label>Password:</label>
           <input type="password" name="password" required>
+
+          {% if request.args.get('show_login') %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }} mt-2" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+          {% endif %}
+          
           <button type="submit" class="login-btn form-btn">Login</button>
         </form>
       </div>
@@ -60,6 +73,5 @@
   </div>
 
   <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-  
 </body>
 </html>

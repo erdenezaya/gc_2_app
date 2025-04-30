@@ -1,0 +1,118 @@
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+/* Profile Container Layout */
+.profile-container {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 2px solid #333;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
+.profile-container h2,
+section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #111;
+}
+
+/* Paragraph styling for user info */
+.profile-container p {
+    font-size: 1rem;
+    margin: 0.25rem 0;
+}
+
+/* Section styling */
+form{
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+/* Labels and Inputs */
+form label {
+    display: inline-block;
+    width: 160px;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+form button{
+    width: 200px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"] {
+    padding: 0.4rem 0.6rem;
+    width: 200px;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+/* Buttons */
+form button {
+    display: inline-block;
+    background-color: #222;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #444;
+    cursor: pointer;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    text-align: left;
+    border: 1px solid #ccc;
+}
+
+table th {
+    background-color: #f3f3f3;
+    font-weight: bold;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Responsive behavior (optional) */
+@media screen and (max-width: 768px) {
+    form label {
+        display: block;
+        width: 100%;
+    }
+
+    form input {
+        width: 100%;
+    }
+
+    .profile-container,
+    section {
+        padding: 1rem;
+    }
+}

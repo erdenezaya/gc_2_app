@@ -496,3 +496,89 @@ def share_snippet():
 
     flash('Shared successfully!', 'success')
     return redirect(url_for('main.dashboard'))
+
+# ------------------------------------------------------------------
+# Profile management page
+# ------------------------------------------------------------------
+
+@main_bp.route("/profile")
+@login_required
+def profile():
+    """Render the user profile page"""
+    # Get current user's habits
+    habits = Habit.query.filter_by(user_id=current_user.id).all()
+    
+    return render_template(
+        "profile.html",
+        active_page="profile",
+        user=current_user,
+        database_data = db.session.query(HabitRecord).all(),
+        shared_snippets = db.session.query(SharedSnippet).filter_by(receiver_id=current_user.id).all(),
+        habits=habits
+    )
+
+@main_bp.route("/update_username", methods=["POST"])
+@login_required
+def update_username():
+    """Update the current user's username"""
+    new_username = request.form.get("new_username").strip()
+    
+    if not new_username:
+        flash("Username cannot be empty", "danger")
+        return redirect(url_for("main.profile"))
+    
+    # Check if username is already taken
+    existing_user = User.query.filter_by(username=new_username).first()
+    if existing_user:
+        flash("This username is already taken", "warning")
+        return redirect(url_for("main.profile"))
+    
+    # Update username
+    current_user.username = new_username
+    db.session.commit()
+    flash("Username updated successfully!", "success")
+    return redirect(url_for("main.profile"))
+
+@main_bp.route("/update_email", methods=["POST"])
+@login_required
+def update_email():
+    """Update the current user's email"""
+    new_email = request.form.get("new_email").strip()
+    
+    if not new_email:
+        flash("Email cannot be empty", "danger")
+        return redirect(url_for("main.profile"))
+    
+    # Check if email is already taken
+    existing_user = User.query.filter_by(email=new_email).first()
+    if existing_user:
+        flash("This email is already in use", "warning")
+        return redirect(url_for("main.profile"))
+    
+    # Update email
+    current_user.email = new_email
+    db.session.commit()
+    flash("Email updated successfully!", "success")
+    return redirect(url_for("main.profile"))
+
+@main_bp.route("/update_password", methods=["POST"])
+@login_required
+def update_password():
+    """Update the current user's password"""
+    current_password = request.form.get("current_password")
+    new_password = request.form.get("new_password")
+    
+    if not current_password or not new_password:
+        flash("All fields are required", "danger")
+        return redirect(url_for("main.profile"))
+    
+    # Verify current password
+    if not current_user.check_password(current_password):
+        flash("Current password is incorrect", "danger")
+        return redirect(url_for("main.profile"))
+    
+    # Update password
+    current_user.set_password(new_password)
+    db.session.commit()
+    flash("Password updated successfully!", "success")
+    return redirect(url_for("main.profile"))

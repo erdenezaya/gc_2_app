@@ -1,7 +1,8 @@
+
 from flask import render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db, login_manager
-from app.models import User   
+from app.models import User   # example model
 from . import auth_bp
 
 @auth_bp.route('/signup', methods=['GET', 'POST'])
@@ -30,7 +31,7 @@ def signup():
         db.session.add(user)
         db.session.commit()
         flash('Registration successful! You can now log in.')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('auth.signup'))
     
     return render_template('index.html')
 
@@ -40,26 +41,27 @@ def login():
         return redirect(url_for('main.dashboard'))
     
     if request.method == 'POST':
-        user_name = request.form['username'].strip().lower()
-        password = request.form['password']
+        user_name = request.form.get('username', '').strip().lower()
+        password = request.form.get('password', '').strip()
 
         user = User.query.filter_by(username=user_name).first()
+        if not user:
+            flash('User is not registered. Please sign up first.','danger')
+            return redirect(url_for('main.home', show_login=True))
+
         if user and user.check_password(password):
             login_user(user)
-            flash('Login successful!')
-
+            flash('Welcome!', 'success')
             next_page = request.args.get('next')
-            if not next_page or not next_page.startswith('/'):
-                next_page = url_for('main.dashboard')
-                
-            return redirect(next_page)  
-            
-        flash('Invalid username or password')
+            return redirect(next_page) if next_page else redirect(url_for('main.dashboard'))
+        else:
+            flash('Invalid username or password','danger')
+            return redirect(url_for('main.home', show_login=True))
     return render_template('index.html')
 
 @auth_bp.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out.','info')
     return redirect(url_for('main.home', show_login=True))
