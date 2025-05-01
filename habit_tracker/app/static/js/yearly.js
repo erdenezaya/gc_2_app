@@ -5,101 +5,80 @@ function generateAnnualGrid(containerId, year, habitData) {
         console.error(`Container not found: ${containerId}`);
         return;
     }
-    
+
     container.innerHTML = '';
-    
+
+    // Define the colors array
+    const colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"];
+
     // Calculate first day of the year and total days
     const firstDay = new Date(year, 0, 1);
     const firstDayOfWeek = firstDay.getDay(); // 0 (Sunday) to 6 (Saturday)
     const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     const totalDays = isLeapYear ? 366 : 365;
-    
-    // Create day of week labels
-    const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const daysContainer = document.createElement('div');
-    daysContainer.className = 'day-labels';
-    
-    // Add a blank cell for the corner
-    const blankCell = document.createElement('div');
-    blankCell.className = 'blank-cell';
-    daysContainer.appendChild(blankCell);
-    
-    // Add day labels
-    dayLabels.forEach(day => {
+
+    // Create a container for the grid with labels
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'grid-container';
+
+    // Add day labels (e.g., Sun, Mon, Tue, ...)
+    const dayLabels = document.createElement('div');
+    dayLabels.className = 'day-labels';
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    daysOfWeek.forEach(day => {
         const dayLabel = document.createElement('div');
         dayLabel.className = 'day-label';
         dayLabel.textContent = day;
-        daysContainer.appendChild(dayLabel);
+        dayLabels.appendChild(dayLabel);
     });
-    
-    // Create grid container
-    const gridContainer = document.createElement('div');
-    gridContainer.className = 'grid-container';
-    
-    gridContainer.appendChild(daysContainer);
-    
-    // Create month labels
-    const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const monthsContainer = document.createElement('div');
-    monthsContainer.className = 'month-labels';
-    
-    // Calculate the column position for each month
-    const monthPositions = [];
-    for (let month = 0; month < 12; month++) {
-        // Get the first day of the month
-        const firstDayOfMonth = new Date(year, month, 1);
-        
-        // Calculate days from the start of the year (January 1st)
-        const daysFromYearStart = Math.floor((firstDayOfMonth - firstDay) / (24 * 60 * 60 * 1000));
-        
-        // Calculate column position (week number)
-        const weekNum = Math.floor((daysFromYearStart + firstDayOfWeek) / 7);
-        
-        monthPositions.push(weekNum);
-    }
-    
-    // Create month labels in the grid
-    for (let i = 0; i < 12; i++) {
-        const monthCell = document.createElement('div');
-        monthCell.className = 'month-label';
-        monthCell.textContent = monthLabels[i];
-        
-        monthCell.style.gridColumnStart = monthPositions[i] + 1; // +1 for CSS grid (1-based)
-        
-        monthsContainer.appendChild(monthCell);
-    }
-    
+    gridContainer.appendChild(dayLabels);
+
+    // Add month labels (e.g., Jan, Feb, ...)
+    const monthLabels = document.createElement('div');
+    monthLabels.className = 'month-labels';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    months.forEach(month => {
+        const monthLabel = document.createElement('div');
+        monthLabel.className = 'month-label';
+        monthLabel.textContent = month;
+        monthLabels.appendChild(monthLabel);
+    });
+    gridContainer.appendChild(monthLabels);
+
     // Create cells grid (7 rows × ~53 columns)
     const cellsGrid = document.createElement('div');
     cellsGrid.className = 'cells-grid';
-    
+
     // Total weeks needed (first partial week to last partial week)
     const totalWeeks = Math.ceil((totalDays + firstDayOfWeek) / 7);
-    
+
     // Create cells for the entire year
     for (let day = 0; day < 7; day++) { // 7 days in a week (rows)
         for (let week = 0; week < totalWeeks; week++) { // ~52-53 weeks (columns)
             const dayNumber = week * 7 + day - firstDayOfWeek + 1;
             const cell = document.createElement('div');
             cell.className = 'grid-cell';
-            
+
             if (dayNumber > 0 && dayNumber <= totalDays) {
                 // This is a valid day in the year
                 const date = new Date(year, 0, dayNumber);
                 const formattedDate = `${year}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-                
+
                 // Store the date as a data attribute for potential interactions
                 cell.setAttribute('data-date', formattedDate);
-                
+
                 // Check if we have data for this date
                 if (habitData && habitData[formattedDate] && habitData[formattedDate].intensity > 0) {
+                    // Assign a color based on intensity or index
+                    const colorIndex = dayNumber % colors.length; // Use dayNumber to iterate colors
+                    cell.style.backgroundColor = colors[colorIndex];
                     cell.classList.add('completed');
-                    
+
                     // Add tooltip with date and notes if available
-                    const tooltipText = habitData[formattedDate].notes 
-                        ? `${formattedDate}: ${habitData[formattedDate].notes}` 
+                    const tooltipText = habitData[formattedDate].notes
+                        ? `${formattedDate}: ${habitData[formattedDate].notes}`
                         : formattedDate;
-                    
+
                     cell.setAttribute('title', tooltipText);
                 } else {
                     // Add tooltip with just the date
@@ -109,13 +88,12 @@ function generateAnnualGrid(containerId, year, habitData) {
                 // This cell is outside the year range
                 cell.classList.add('empty');
             }
-            
+
             cellsGrid.appendChild(cell);
         }
     }
-    
+
     // Add all components to the container
-    gridContainer.appendChild(monthsContainer);
     gridContainer.appendChild(cellsGrid);
     container.appendChild(gridContainer);
 }
