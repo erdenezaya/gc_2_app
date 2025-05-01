@@ -37,7 +37,7 @@ class Habit(db.Model):
     __tablename__ = 'habits'
 
     id = db.Column(db.Integer, primary_key=True)
-    habit_name = db.Column(db.String(80), nullable=False)
+    habit_name = db.Column(db.String(128), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     records = db.relationship('HabitRecord', backref='habit', lazy=True)

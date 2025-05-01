@@ -1,0 +1,677 @@
+============================= test session starts =============================
+platform win32 -- Python 3.11.7, pytest-8.3.5, pluggy-1.5.0
+rootdir: C:\Users\Zaya\Desktop\UWA-Zaya\2025\Course\Units\CITS5505\Assignment\5505-Group-gc2\gc_2_app
+configfile: pytest.ini
+plugins: anyio-4.4.0, flask-1.3.0
+collected 4 items
+
+tests\test_auth.py FF.F                                                  [100%]
+
+================================== FAILURES ===================================
+_______________________ test_login_success_sets_session _______________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025AA9350DD0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA938FE50>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025AA938FF50>
+parameters = [('alice', 'a@ex.com', 'scrypt:32768:8:1$Zuu1BfxkY0srDzz9$c6a69a3176b66107e3c183983fffc53574afdd372e9783096f0152319fff...9aeabb4be251c061d85de', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AA931CD40>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$Zuu1BfxkY0srDzz9$c6a69a3176b66107e3c183983fffc53574afdd372e9783096f0152319fff0...e9aeabb4be251c061d85de', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA938FE50>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: UNIQUE constraint failed: users.username
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x0000025AA9303920>
+
+    def test_login_success_sets_session(client, make_user):
+>       make_user(username="alice", password="secret")
+
+tests\test_auth.py:5: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\conftest.py:60: in _factory
+    db.session.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\scoping.py:599: in commit
+    return self._proxied.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:2032: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1288: in _prepare_impl
+    self.session.flush()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:1233: in _emit_insert_statements
+    result = connection.execute(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\sql\elements.py:523: in _execute_on_connection
+    return connection._execute_clauseelement(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1638: in _execute_clauseelement
+    ret = self._execute_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1843: in _execute_context
+    return self._exec_single_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1983: in _exec_single_context
+    self._handle_dbapi_exception(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:2352: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AA931CD40>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$Zuu1BfxkY0srDzz9$c6a69a3176b66107e3c183983fffc53574afdd372e9783096f0152319fff0...e9aeabb4be251c061d85de', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA938FE50>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: users.username
+E       [SQL: INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('alice', 'a@ex.com', 'scrypt:32768:8:1$Zuu1BfxkY0srDzz9$c6a69a3176b66107e3c183983fffc53574afdd372e9783096f0152319fff0b69f3e4959cf287ea821cb4b4bb7b5c182c2b4ed24ce3e9aeabb4be251c061d85de', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330', '2025-04-30 13:05:51.570330')]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+__________________________ test_login_wrong_password __________________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025AA9D5E0D0>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9D5F610>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025AA938FF50>
+parameters = [('alice', 'a@ex.com', 'scrypt:32768:8:1$kZp4zSPHGPzBOE2X$a156c4c006f725b384d7d1b6aba6ccfa121fc2a4855a44a0b0dc28244680...6b5d92142f15ed2fc01df', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AAA2191C0>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$kZp4zSPHGPzBOE2X$a156c4c006f725b384d7d1b6aba6ccfa121fc2a4855a44a0b0dc282446800...16b5d92142f15ed2fc01df', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9D5F610>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: UNIQUE constraint failed: users.username
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x0000025AA93EF600>
+
+    def test_login_wrong_password(client, make_user):
+>       make_user(username="alice", password="secret")
+
+tests\test_auth.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\conftest.py:60: in _factory
+    db.session.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\scoping.py:599: in commit
+    return self._proxied.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:2032: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1288: in _prepare_impl
+    self.session.flush()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:1233: in _emit_insert_statements
+    result = connection.execute(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\sql\elements.py:523: in _execute_on_connection
+    return connection._execute_clauseelement(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1638: in _execute_clauseelement
+    ret = self._execute_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1843: in _execute_context
+    return self._exec_single_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1983: in _exec_single_context
+    self._handle_dbapi_exception(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:2352: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AAA2191C0>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$kZp4zSPHGPzBOE2X$a156c4c006f725b384d7d1b6aba6ccfa121fc2a4855a44a0b0dc282446800...16b5d92142f15ed2fc01df', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9D5F610>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: users.username
+E       [SQL: INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('alice', 'a@ex.com', 'scrypt:32768:8:1$kZp4zSPHGPzBOE2X$a156c4c006f725b384d7d1b6aba6ccfa121fc2a4855a44a0b0dc28244680083f613cb942830d7a3357bc39188c292d2baeeb18419816b5d92142f15ed2fc01df', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960', '2025-04-30 13:05:52.380960')]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+_________________________ test_logout_clears_session __________________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000025AA9DDF610>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9610CD0>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000025AA938FF50>
+parameters = [('alice', 'a@ex.com', 'scrypt:32768:8:1$8ZJX2ijgWC38wEbX$ef69a3c62b46c1a7d25b374e6390fb28089c4b1c5d86945f440752d4f678...d179006e34c6193912059', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Any]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        if self._has_events or self.engine._has_events:
+            for fn in self.dispatch.before_cursor_execute:
+                str_statement, effective_parameters = fn(
+                    self,
+                    cursor,
+                    str_statement,
+                    effective_parameters,
+                    context,
+                    context.executemany,
+                )
+    
+        if self._echo:
+            self._log_info(str_statement)
+    
+            stats = context._get_cache_stats()
+    
+            if not self.engine.hide_parameters:
+                self._log_info(
+                    "[%s] %r",
+                    stats,
+                    sql_util._repr_params(
+                        effective_parameters,
+                        batches=10,
+                        ismulti=context.executemany,
+                    ),
+                )
+            else:
+                self._log_info(
+                    "[%s] [SQL parameters hidden due to hide_parameters=True]",
+                    stats,
+                )
+    
+        evt_handled: bool = False
+        try:
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AA95EE040>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$8ZJX2ijgWC38wEbX$ef69a3c62b46c1a7d25b374e6390fb28089c4b1c5d86945f440752d4f678b...bd179006e34c6193912059', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9610CD0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: UNIQUE constraint failed: users.username
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+client = <FlaskClient <Flask 'app'>>
+make_user = <function make_user.<locals>._factory at 0x0000025AA9D22480>
+
+    def test_logout_clears_session(client, make_user):
+>       make_user(username="alice", password="secret")
+
+tests\test_auth.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\conftest.py:60: in _factory
+    db.session.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\scoping.py:599: in commit
+    return self._proxied.commit()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:2032: in commit
+    trans.commit(_to_root=True)
+<string>:2: in commit
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1313: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\state_changes.py:139: in _go
+    ret_value = fn(self, *arg, **kw)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:1288: in _prepare_impl
+    self.session.flush()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\util\langhelpers.py:146: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\orm\persistence.py:1233: in _emit_insert_statements
+    result = connection.execute(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1416: in execute
+    return meth(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\sql\elements.py:523: in _execute_on_connection
+    return connection._execute_clauseelement(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1638: in _execute_clauseelement
+    ret = self._execute_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1843: in _execute_context
+    return self._exec_single_context(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1983: in _exec_single_context
+    self._handle_dbapi_exception(
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:2352: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\base.py:1964: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000025AA92C3E10>
+cursor = <sqlite3.Cursor object at 0x0000025AA95EE040>
+statement = 'INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('alice', 'a@ex.com', 'scrypt:32768:8:1$8ZJX2ijgWC38wEbX$ef69a3c62b46c1a7d25b374e6390fb28089c4b1c5d86945f440752d4f678b...bd179006e34c6193912059', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000025AA9610CD0>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: users.username
+E       [SQL: INSERT INTO users (username, email, password_hash, created_at, updated_at, last_login, last_activity) VALUES (?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('alice', 'a@ex.com', 'scrypt:32768:8:1$8ZJX2ijgWC38wEbX$ef69a3c62b46c1a7d25b374e6390fb28089c4b1c5d86945f440752d4f678bcc5bb6f2b4dedcaa0a5924acfb41dfd847cc6ae2e23c4bd179006e34c6193912059', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754', '2025-04-30 13:05:52.792754')]
+E       (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+C:\Users\Zaya\.platformio\penv\Lib\site-packages\sqlalchemy\engine\default.py:945: IntegrityError
+============================== warnings summary ===============================
+habit_tracker/tests/test_auth.py::test_login_success_sets_session
+habit_tracker/tests/test_auth.py::test_login_wrong_password
+habit_tracker/tests/test_auth.py::test_logout_clears_session
+  C:\Users\Zaya\Desktop\UWA-Zaya\2025\Course\Units\CITS5505\Assignment\5505-Group-gc2\gc_2_app\habit_tracker\tests\conftest.py:47: SAWarning: transaction already deassociated from connection
+    transaction.rollback()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests\test_auth.py::test_login_success_sets_session - sqlalchemy.exc.I...
+FAILED tests\test_auth.py::test_login_wrong_password - sqlalchemy.exc.Integri...
+FAILED tests\test_auth.py::test_logout_clears_session - sqlalchemy.exc.Integr...
+=================== 3 failed, 1 passed, 3 warnings in 1.65s ===================
