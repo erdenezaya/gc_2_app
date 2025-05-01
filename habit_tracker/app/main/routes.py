@@ -144,9 +144,12 @@ def dashboard():
     total_habits = len(habits)
     completed_count = 0
 
-    # Calculate streak
+    # Calculate overall streak
     streak = calculate_streak(current_user.id)
     
+    # Color palette for habits
+    colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"]
+
     # For each habit, get completion status and statistics
     for habit in habits:
         # Check if habit is completed today
@@ -159,40 +162,41 @@ def dashboard():
         is_completed = bool(today_record)
         if is_completed:
             completed_count += 1
-        
-            # Calculate streak
-    streak = calculate_streak(habit.id)
 
-    # Calculate weekly completion (e.g., "6/7")
-    completed_days, total_days = get_weekly_completion(habit.id)
-    completion_rate = f"{completed_days}/{total_days}"
+        # Calculate streak for this habit
+        habit_streak = calculate_streak(habit.id)
 
-    # Get color class based on habit name
-    color_class = get_habit_color(habit.habit_name)
+        # Calculate weekly completion (e.g., "6/7")
+        completed_days, total_days = get_weekly_completion(habit.id)
+        completion_rate = f"{completed_days}/{total_days}"
 
-    # Add to habit data list
-    habit_data.append({
-        "id": habit.id,
-        "name": habit.habit_name,
-        "completed": is_completed,
-        "completion_rate": completion_rate,
-        "completion_percent": (completed_days / total_days * 100) if total_days > 0 else 0,
-        "color_class": color_class,
-        "streak": streak
-    })
+        # Get color class based on habit name
+        color_class = get_habit_color(habit.habit_name)
 
-# Calculate max streak for progress bar
-max_streak = max([h["streak"] for h in habit_data]) if habit_data else 0
+        # Add to habit data list
+        habit_data.append({
+            "id": habit.id,
+            "name": habit.habit_name,
+            "completed": is_completed,
+            "completion_rate": completion_rate,
+            "completion_percent": (completed_days / total_days * 100) if total_days > 0 else 0,
+            "color_class": color_class,
+            "streak": habit_streak
+        })
 
-return render_template(
-    "dashboard.html",
-    active_page="dashboard",
-    habits=habit_data,
-    completed_count=completed_count,
-    total_habits=total_habits,
-    max_streak=max_streak,
-    streak=streak
-)
+    # Calculate max streak for progress bar
+    max_streak = max([h["streak"] for h in habit_data]) if habit_data else 0
+
+    return render_template(
+        "dashboard.html",
+        active_page="dashboard",
+        habits=habit_data,
+        completed_count=completed_count,
+        total_habits=total_habits,
+        max_streak=max_streak,
+        streak=streak,  # user streak, not habit streak
+        colors=colors
+    )
 
 
 @main_bp.route("/weekly")
@@ -284,12 +288,16 @@ def yearly():
 
     # Calculate streak
     streak = calculate_streak(current_user.id)
+
+    # Color palette for habits
+    colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"];
     
     return render_template(
         "yearly.html",
         active_page="yearly",
         habits=habits,
         streak=streak,
+        colors=colors,
     )
 
 # ------------------------------------------------------------------
@@ -532,6 +540,9 @@ def profile():
     """Render the user profile page"""
     # Get current user's habits
     habits = Habit.query.filter_by(user_id=current_user.id).all()
+
+     # Calculate streak
+    streak = calculate_streak(current_user.id)
     
     return render_template(
         "profile.html",
@@ -539,7 +550,8 @@ def profile():
         user=current_user,
         database_data = db.session.query(HabitRecord).all(),
         shared_snippets = db.session.query(SharedSnippet).filter_by(receiver_id=current_user.id).all(),
-        habits=habits
+        habits=habits,
+        streak = streak,
     )
 
 @main_bp.route("/update_username", methods=["POST"])

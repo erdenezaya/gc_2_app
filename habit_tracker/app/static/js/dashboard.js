@@ -10,19 +10,27 @@ const totalHabits = window.totalHabits;
 const remaining = Math.max(totalHabits - todayDone, 0);
 const percentage = totalHabits === 0 ? 0 : Math.round((todayDone / totalHabits) * 100);
 
+// Create a gradient for the "Completed" section
+const gradient = ctx.createLinearGradient(0, 0, 300, 300);
+gradient.addColorStop(0, '#FF786F'); // Start color (red)
+gradient.addColorStop(1, '#AF75F1'); // End color (purple)
+
 const doughnutChart = new Chart(ctx, {
   type: 'doughnut',
   data: {
     labels: ['Completed', 'Remaining'],
     datasets: [{
       data: totalHabits === 0 ? [0, 1] : [todayDone, remaining],
-      backgroundColor: ['#4CAF50', '#e0e0e0'],
+      backgroundColor: [
+        gradient, // Gradient for "Completed"
+        '#e0e0e0' // Default color for "Remaining"
+      ],
       borderColor: [
         "black", 
         "black"  
       ],
       borderWidth: 2 // Set border width to 2px
-      }]
+    }]
   },
   options: {
     cutout: '65%',
@@ -61,7 +69,7 @@ const doughnutChart = new Chart(ctx, {
       ctx.fillText(options.labels[0].text, width / 2, height / 2);
     }
   }]
-})
+});
 
 // function to send a share request
 function submitShareForm() {
