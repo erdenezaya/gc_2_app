@@ -87,16 +87,23 @@ function renderCalendar() {
         cell.addEventListener("click", () => {
             const key = cell.dataset.key;
             const hIdx = parseInt(cell.dataset.habit, 10);
+<<<<<<< Updated upstream
             const habitColor = habits[hIdx].color || "#ccc";
 
             const wasDone = cell.style.backgroundColor !== "";
+=======
+            const habitColor = habits[hIdx].color;
+        
+            const wasDone = cell.classList.contains('completed');
+            
+>>>>>>> Stashed changes
             if (wasDone) {
-                // Toggle off
                 cell.style.backgroundColor = "";
+                cell.classList.remove('completed');
                 localStorage.removeItem(key);
             } else {
-                // Mark as done
                 cell.style.backgroundColor = habitColor;
+                cell.classList.add('completed');
                 localStorage.setItem(key, "1");
             }
         });
