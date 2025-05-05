@@ -1,5 +1,5 @@
 // Function to create GitHub-style annual contribution grid
-function generateAnnualGrid(containerId, year, habitData) {
+function generateAnnualGrid(containerId, year, habitData, habitColor) {
     const container = document.getElementById(containerId);
     if (!container) {
         console.error(`Container not found: ${containerId}`);
@@ -7,9 +7,6 @@ function generateAnnualGrid(containerId, year, habitData) {
     }
 
     container.innerHTML = '';
-
-    // Define the colors array
-    const colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"];
 
     // Calculate first day of the year and total days
     const firstDay = new Date(year, 0, 1);
@@ -37,10 +34,15 @@ function generateAnnualGrid(containerId, year, habitData) {
     const monthLabels = document.createElement('div');
     monthLabels.className = 'month-labels';
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    months.forEach(month => {
+    months.forEach((month, index) => {
         const monthLabel = document.createElement('div');
         monthLabel.className = 'month-label';
         monthLabel.textContent = month;
+
+        // Position the month label based on the first day of the month
+        const firstDayOfMonth = new Date(year, index, 1);
+        const offset = Math.floor((firstDayOfMonth.getTime() - firstDay.getTime()) / (1000 * 60 * 60 * 24));
+        monthLabel.style.gridColumnStart = Math.floor((offset + firstDayOfWeek) / 7) + 1;
         monthLabels.appendChild(monthLabel);
     });
     gridContainer.appendChild(monthLabels);
@@ -69,9 +71,8 @@ function generateAnnualGrid(containerId, year, habitData) {
 
                 // Check if we have data for this date
                 if (habitData && habitData[formattedDate] && habitData[formattedDate].intensity > 0) {
-                    // Assign a color based on intensity or index
-                    const colorIndex = dayNumber % colors.length; // Use dayNumber to iterate colors
-                    cell.style.backgroundColor = colors[colorIndex];
+                    // Use the assigned habit color
+                    cell.style.backgroundColor = habitColor;
                     cell.classList.add('completed');
 
                     // Add tooltip with date and notes if available
@@ -96,6 +97,12 @@ function generateAnnualGrid(containerId, year, habitData) {
     // Add all components to the container
     gridContainer.appendChild(cellsGrid);
     container.appendChild(gridContainer);
+
+    // Update the legend color for "Completed"
+    const legendCompleted = container.parentElement.querySelector('.legend-cell.completed');
+    if (legendCompleted) {
+        legendCompleted.style.backgroundColor = habitColor;
+    }
 }
 
 // Function to fetch habit data from backend
@@ -141,31 +148,37 @@ async function fetchHabits() {
 // Initialize grids for all habits
 async function initializeGrids(year) {
     try {
+    // Define the colors array
+    const colors = window.habitChartColors; 
+
         // Get all habit containers
         const habitContainers = document.querySelectorAll('.habit-container');
-        
+
         // Process each habit container
-        for (const container of habitContainers) {
+        habitContainers.forEach((container, index) => {
             // Get habit title and ID
             const titleElement = container.querySelector('.habit-title');
             const gridElement = container.querySelector('.github-style-grid');
-            
-            if (!titleElement || !gridElement) continue;
-            
+
+            if (!titleElement || !gridElement) return;
+
             const habitName = titleElement.textContent.trim();
             const habitId = gridElement.id.replace('grid-', '');
-            
+
             console.log(`Processing habit: ${habitName}, ID: ${habitId}`);
-            
+
+            // Assign a unique color for this habit
+            const habitColor = colors[index % colors.length];
+
             // Show loading state
             gridElement.innerHTML = '<div style="text-align: center; padding: 20px;">Loading data...</div>';
-            
+
             // Fetch data for this habit
-            const habitData = await fetchHabitData(habitId, year);
-            
-            // Generate the grid with the data
-            generateAnnualGrid(gridElement.id, year, habitData);
-        }
+            fetchHabitData(habitId, year).then(habitData => {
+                // Generate the grid with the data and the assigned color
+                generateAnnualGrid(gridElement.id, year, habitData, habitColor);
+            });
+        });
     } catch (error) {
         console.error('Error initializing grids:', error);
         document.querySelectorAll('.github-style-grid').forEach(grid => {

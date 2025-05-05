@@ -27,10 +27,10 @@
             <div class="grid-footer">
                 <div></div>
                 <div class="intensity-legend">
-                    <!-- <span class="legend-label">Not Completed</span>
+                    <span class="legend-label">Not Completed</span>
                     <div class="legend-cell not-completed"></div>
                     <span class="legend-label">Completed</span>
-                    <div class="legend-cell completed"></div> -->
+                    <div class="legend-cell completed"></div>
                 </div>
             </div>
         </div>
@@ -38,5 +38,7 @@
     </div>
     <!-- Modal for share button -->
     {% include 'share_modal.html' %}
+    <!-- pass color palette to JS -->
+    <script>window.habitChartColors = {{ colors | tojson }};</script> 
     <script src="{{ url_for('static', filename='js/yearly.js') }}"></script>
 {% endblock %}
