@@ -458,6 +458,41 @@ def toggle_habit(habit_id):
     flash(f"Habit '{habit.habit_name}' {status_msg}", "success")
     return redirect(url_for("main.dashboard"))
 
+@main_bp.route("/habits_by_date", methods=["GET"])
+@login_required
+def habits_by_date():
+    """Display habits based on the selected date"""
+    # Get the selected date from the query parameters
+    date_str = request.args.get("date")
+    if not date_str:
+        return jsonify({"success": False, "error": "Date is required"}), 400
+
+    try:
+        selected_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"success": False, "error": "Invalid date format"}), 400
+
+    # Get the current user's habits
+    habits = Habit.query.filter_by(user_id=current_user.id).all()
+
+    # Prepare habit data for the selected date
+    habit_data = []
+    for habit in habits:
+        # Check if the habit is completed on the selected date
+        record = HabitRecord.query.filter_by(
+            habit_id=habit.id,
+            date=selected_date
+        ).first()
+
+        is_completed = bool(record and record.completed)
+        habit_data.append({
+            "id": habit.id,
+            "name": habit.habit_name,
+            "completed": is_completed,
+        })
+
+    return jsonify({"success": True, "habits": habit_data})
+
 # ------------------------------------------------------------------
 # API routes for data visualization
 # ------------------------------------------------------------------

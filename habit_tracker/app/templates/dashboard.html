@@ -22,8 +22,9 @@
                 <input type="date" id="date-picker" class="form-control" style="display: inline-block; width: auto;">
                 <button type="button" class="btn btn-primary" onclick="handleDateSelection()">go</button>
             </div>
-            <!-- Dynamic habits list -->
-             
+
+            <div id="habit-list">
+            <!-- Habit items will be dynamically added here -->
             {% for habit in habits %}
             <div class="habit-item">
                 <!-- Habit checkbox and label -->
@@ -40,7 +41,7 @@
                 </form>
             </div>
             {% endfor %}
-            
+            </div>
             <!-- Add new habit form -->
             <form action="{{ url_for('main.create_habit') }}" method="POST" class="add-habit-form" style="display: flex; justify-content: space-between; align-items: center;">
                 <input id="input-field" type="text" name="habit_name" placeholder="New habit name" required style="flex: 1; margin-right: 10px;">
