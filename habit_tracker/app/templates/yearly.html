@@ -38,6 +38,7 @@
     </div>
     <!-- Modal for share button -->
     {% include 'share_modal.html' %}
+<!----------------------javascript -------------------------------->
     <!-- pass color palette to JS -->
     <script>window.habitChartColors = {{ colors | tojson }};</script> 
     <script src="{{ url_for('static', filename='js/yearly.js') }}"></script>
