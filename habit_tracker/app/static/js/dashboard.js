@@ -3,17 +3,21 @@
   of completed habits and the remaining habits for today.
   The chart is rendered in a canvas element with the ID 'daily_completion'.
 */
-const ctx = document.getElementById('daily_completion').getContext('2d');
+// Get canvas context
+const ctx = document.getElementById("daily_completion").getContext("2d");
+
+// Use colors from the backend
+const stops = window.chartGradient || ["#FF1111", "#FFA500", "#FFFF00", "#00FF00"]; // Fallback colors if not provided
+const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+
+stops.forEach((color, i) => {
+  gradient.addColorStop(i / (stops.length - 1), color);
+});
 
 const todayDone = window.todayDone;
 const totalHabits = window.totalHabits;
 const remaining = Math.max(totalHabits - todayDone, 0);
 const percentage = totalHabits === 0 ? 0 : Math.round((todayDone / totalHabits) * 100);
-
-// Create a gradient for the "Completed" section
-const gradient = ctx.createLinearGradient(0, 0, 300, 300);
-gradient.addColorStop(0, '#FF786F'); // Start color (red)
-gradient.addColorStop(1, '#AF75F1'); // End color (purple)
 
 const doughnutChart = new Chart(ctx, {
   type: 'doughnut',
@@ -34,7 +38,7 @@ const doughnutChart = new Chart(ctx, {
   },
   options: {
     cutout: '65%',
-    plugins: {
+        plugins: {
       legend: { display: false },
       tooltip: { enabled: false },
       doughnutLabel: {

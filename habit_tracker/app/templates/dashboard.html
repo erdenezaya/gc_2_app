@@ -9,8 +9,7 @@
 {% block script %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    {% endblock %}
+{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -80,14 +79,15 @@
         </section>        
     </div>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.todayDone = {{ completed_count | default(0) }};
-        window.totalHabits = {{ total_habits | default(0) }};
-
-    </script>
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-
     <!-- Modal for share button -->
     {% include 'share_modal.html' %}
+
+<!----------------------javascript -------------------------------->
+    <script>
+        window.chartGradient = {{ gradients | tojson }};
+        window.todayDone = {{ completed_count | default(0) }};
+        window.totalHabits = {{ total_habits | default(0) }};
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

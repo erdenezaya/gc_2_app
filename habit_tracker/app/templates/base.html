@@ -53,8 +53,11 @@
   </div>
   <!-- Streak progress bar at the bottom -->
   <div class="progress-container" style="flex-basis: 100%;">
-    <div class="progress-fill" style="width: {{ streak * 5 }}%;"></div>
-    <div class="progress-icon" style="left: {{ streak * 5 }}%;">🔥</div>
+    <div class="progress-fill"
+         style="width: {{ streak * 5 }}%;
+                background-image: linear-gradient(90deg, {{ progress_gradient[0] }}, {{ progress_gradient[1] }});">
+    </div>
+   <div class="progress-icon" style="left: {{ streak * 5 }}%;">🔥</div>
   </div>
   {% block scripts %}{% endblock %}
 

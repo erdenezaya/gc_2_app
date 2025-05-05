@@ -30,6 +30,9 @@
     {% include 'share_modal.html' %}
 
 <!----------------------javascript -------------------------------->
+  <!-- pass color palette for doughnutchart  to JS -->
+  <script>window.habitChartColors = {{ colors | tojson }};</script> 
+
   <!-- Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>

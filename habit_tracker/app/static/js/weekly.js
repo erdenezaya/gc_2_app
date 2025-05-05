@@ -21,8 +21,10 @@ const centerTextPlugin = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  const chartsData = window.habitChartData || [];
-  const colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"]; // Define the colors array
+
+    const chartsData = window.habitChartData || [];
+    const colors = window.habitChartColors; 
+
 
   chartsData.forEach((habit, index) => {
       new Chart(document.getElementById(`chart-${habit.id}`), {

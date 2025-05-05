@@ -4,6 +4,12 @@ from app import db
 from app.models import Habit, HabitRecord, SharedSnippet, User
 from datetime import datetime, timedelta
 from . import main_bp
+<<<<<<< HEAD
+=======
+from .controller import create_default_habits, get_habit_color, calculate_streak, get_weekly_completion
+from app.config import COLOR_PALETTE, COLOR_GRADIENTS, PROGRESS_BAR_GRADIENT
+
+>>>>>>> 8a4e96a (Add color palette and gradients in config.py for habit tracking visuals;)
 
 # ------------------------------------------------------------------
 # Public landing page
@@ -169,8 +175,7 @@ def dashboard():
         # Calculate weekly completion (e.g., "6/7")
         completed_days, total_days = get_weekly_completion(habit.id)
         completion_rate = f"{completed_days}/{total_days}"
-
-        # Get color class based on habit name
+                # Get color class based on habit name
         color_class = get_habit_color(habit.habit_name)
 
         # Add to habit data list
@@ -194,9 +199,12 @@ def dashboard():
         completed_count=completed_count,
         total_habits=total_habits,
         max_streak=max_streak,
-        streak=streak,  # user streak, not habit streak
-        colors=colors
+        streak=streak,  # user streak
+        colors=COLOR_PALETTE,
+        gradients=COLOR_GRADIENTS,
+        progress_gradient=PROGRESS_BAR_GRADIENT
     )
+
 
 
 @main_bp.route("/weekly")
@@ -241,6 +249,8 @@ def weekly():
         habits=habits_data,
         date_range=date_range,
         streak=streak,
+        colors=COLOR_PALETTE,
+        progress_gradient=PROGRESS_BAR_GRADIENT,
     )
 
 @main_bp.route("/monthly")
@@ -274,8 +284,12 @@ def monthly():
         active_page="monthly",
         habits=habits,
         streak=streak,
+
         habit_completions=habit_completions,
         current_date=current_date
+
+        progress_gradient=PROGRESS_BAR_GRADIENT,
+
     )
 
 
@@ -289,15 +303,13 @@ def yearly():
     # Calculate streak
     streak = calculate_streak(current_user.id)
 
-    # Color palette for habits
-    colors = ["#34BB61", "#FF786F", "#AF75F1", "#0D99FF"];
-    
     return render_template(
         "yearly.html",
         active_page="yearly",
         habits=habits,
         streak=streak,
-        colors=colors,
+        colors=COLOR_PALETTE,
+        progress_gradient=PROGRESS_BAR_GRADIENT,
     )
 
 # ------------------------------------------------------------------
