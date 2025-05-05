@@ -1,1 +1,24 @@
+# Python virtual environment
+venv/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Editor/OS specific
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+
+# VS Code
+.vscode/
+
+# Logs and cache
+*.log
+.cache/
+
+# App database
 app/app.db
