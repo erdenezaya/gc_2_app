@@ -638,6 +638,7 @@ def profile():
         shared_snippets = db.session.query(SharedSnippet).filter_by(receiver_id=current_user.id).all(),
         habits=habits,
         streak = streak,
+        progress_gradient = PROGRESS_BAR_GRADIENT,
     )
 
 @main_bp.route("/update_username", methods=["POST"])
