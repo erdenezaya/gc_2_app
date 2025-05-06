@@ -22,7 +22,6 @@ h1 {
     .habit-item {
         display: flex;
         justify-content: space-between; 
-        align-items: center; 
         margin: 15px 0;
         font-size: 1.2rem;
     }
@@ -100,6 +99,19 @@ label {
     font-size: 1.2rem;
     margin-left: 10px;
     }
+
+.save-btn {
+    padding: 8px 16px;
+    background-color: white;
+    border: 3.5px solid black;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 2px rgba(0,0,0,0.4);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;     /* Semi Bold */
+    font-size: 18px;
+    margin-top: 20px;
+}
 
 /* Responsive styles */
 @media (max-width: 1300px) {

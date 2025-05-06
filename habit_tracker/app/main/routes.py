@@ -455,7 +455,7 @@ def toggle_habit(habit_id):
         })
     
     # Return to dashboard for regular form submissions
-    flash(f"Habit '{habit.habit_name}' {status_msg}", "success")
+    flash(f"Habit '{habit.habit_name}' {status_msg} for {record_date.strftime('%Y-%m-%d')}", "success")
     return redirect(url_for("main.dashboard"))
 
 @main_bp.route("/habits_by_date", methods=["GET"])
@@ -492,6 +492,45 @@ def habits_by_date():
         })
 
     return jsonify({"success": True, "habits": habit_data})
+
+@main_bp.route("/save_habit_statuses", methods=["POST"])
+@login_required
+def save_habit_statuses():
+    """Save habit statuses for a specific date"""
+    data = request.get_json()
+    if not data:
+        return jsonify({"success": False, "error": "Invalid JSON data"}), 400
+
+    date_str = data.get("date")
+    habits = data.get("habits")
+    if not date_str or not habits:
+        return jsonify({"success": False, "error": "Date and habits are required"}), 400
+
+    try:
+        record_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+    except ValueError:
+        return jsonify({"success": False, "error": "Invalid date format"}), 400
+
+    for habit_data in habits:
+        habit_id = habit_data.get("habit_id")
+        completed = habit_data.get("completed")
+
+        habit = Habit.query.get(habit_id)
+        if not habit or habit.user_id != current_user.id:
+            continue  # Skip invalid or unauthorized habits
+
+        # Find or create the record
+        record = HabitRecord.query.filter_by(habit_id=habit_id, date=record_date).first()
+        if record:
+            record.completed = completed
+        else:
+            record = HabitRecord(habit_id=habit_id, date=record_date, completed=completed)
+            db.session.add(record)
+
+    # Commit the changes to the database
+    db.session.commit()
+
+    return jsonify({"success": True})
 
 # ------------------------------------------------------------------
 # API routes for data visualization

@@ -115,43 +115,51 @@ function handleDateSelection() {
                             const habitItem = document.createElement("div");
                             habitItem.className = "habit-item";
 
-                            // Create the checkbox form
-                            const toggleForm = document.createElement("form");
-                            toggleForm.action = `/habits/${habit.id}/toggle`;
-                            toggleForm.method = "POST";
-                            toggleForm.className = "toggle-form";
-
+                            // Create a wrapper div for the checkbox and label
+                            const checkboxLabelWrapper = document.createElement("div");
+                            checkboxLabelWrapper.className = "checkbox-label-wrapper";
+  
+                            // Create the checkbox
                             const checkbox = document.createElement("input");
                             checkbox.type = "checkbox";
                             checkbox.id = `habit${habit.id}`;
                             checkbox.checked = habit.completed; // Set checkbox based on completion status
-                            checkbox.onchange = () => toggleForm.submit();
+                            checkbox.dataset.habitId = habit.id; // Store habit ID for later use
 
+                            // Create the label
                             const label = document.createElement("label");
                             label.htmlFor = `habit${habit.id}`;
                             label.textContent = habit.name;
 
-                            toggleForm.appendChild(checkbox);
-                            toggleForm.appendChild(label);
-                            habitItem.appendChild(toggleForm);
+                            // Append the checkbox and label to the wrapper
+                            checkboxLabelWrapper.appendChild(checkbox);
+                            checkboxLabelWrapper.appendChild(label);
+                            // Append the wrapper to the habit item
 
-                            // Create the delete button form
-                            const deleteForm = document.createElement("form");
-                            deleteForm.action = `/habits/${habit.id}/delete`;
-                            deleteForm.method = "POST";
-                            deleteForm.style.display = "inline";
-
+                            habitItem.appendChild(checkboxLabelWrapper);
+                            // Create the delete button
                             const deleteButton = document.createElement("button");
-                            deleteButton.type = "submit";
-                            deleteButton.className = "delete-btn";
+                            deleteButton.className = "delete-btn btn btn-danger";
                             deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-                            deleteButton.onclick = () => confirm('Are you sure you want to delete this habit?');
+                            deleteButton.onclick = () => deleteHabit(habit.id);
 
-                            deleteForm.appendChild(deleteButton);
-                            habitItem.appendChild(deleteForm);
+                            habitItem.appendChild(deleteButton);
 
                             habitList.appendChild(habitItem);
                         });
+
+                        // Add a "Save" button
+                        const saveButton = document.createElement("button");
+                        saveButton.textContent = "Save";
+                        saveButton.className = "save-btn";
+                        saveButton.onclick = () => saveHabitStatuses(selectedDate);
+                        habitList.appendChild(saveButton);
+
+                        // Hide the "Add Habit" form
+                        const addHabitForm = document.querySelector(".add-habit-form");
+                        if (addHabitForm) {
+                            addHabitForm.style.display = "none"; // Hide the form
+                        }
                     } else {
                         alert(data.error);
                     }
@@ -163,4 +171,35 @@ function handleDateSelection() {
     } else {
         alert('Please select a date.');
     }
+}
+
+// Function to save habit statuses
+function saveHabitStatuses(selectedDate) {
+    const checkboxes = document.querySelectorAll("#habit-list input[type='checkbox']");
+    const habitStatuses = Array.from(checkboxes).map(checkbox => ({
+        habit_id: checkbox.dataset.habitId,
+        completed: checkbox.checked
+    }));
+
+    // Send the updated statuses to the backend
+    fetch(`/save_habit_statuses`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify({ date: selectedDate, habits: habitStatuses })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert(`Habit statuses updated successfully for ${selectedDate}!`);
+        window.location.href = "/dashboard"; // Redirect to /dashboard
+      } else {
+        alert(data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Error saving habit statuses:", error);
+    });
 }
