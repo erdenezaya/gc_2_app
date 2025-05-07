@@ -28,7 +28,7 @@
         <a href="{{ url_for('main.profile')}}" class="nav-btn {% if active_page == 'profile' %}btn-active{% endif %}">Profile</a>
       </div>
       <div class="navbar-right">
-        <button class="nav-btn" data-toggle="modal" data-target="#inboxModal">Inbox 📨</button>
+        <button class="nav-btn" onclick="document.getElementById('sharePopup').style.display='flex'">Share 📨</button>
         <a href="{{ url_for('main.weekly') }}" class="text-dark nav-btn {% if active_page == 'weekly' %}btn-active{% endif %}">Weekly</a>
         <a href="{{ url_for('main.monthly') }}" class="text-dark nav-btn {% if active_page == 'monthly' %}btn-active{% endif %}">Monthly</a>
         <a href="{{ url_for('main.yearly') }}" class="text-dark nav-btn {% if active_page == 'yearly' %}btn-active{% endif %}">Yearly</a>
@@ -63,9 +63,6 @@
   </div>
   {% block scripts %}{% endblock %}
 
-
-<!-- Inbox Modal -->
-{% include 'inbox_modal.html' %}
 
 </body>
 {% with flashes = get_flashed_messages(with_categories=true) %}
