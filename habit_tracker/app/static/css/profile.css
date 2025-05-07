@@ -100,6 +100,89 @@ table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+#shared-habits-container {
+    margin-top: 2rem;
+}
+
+#shared-habits-container strong,span {
+    color: #00000092;
+}
+
+/* GitHub-style grid layout */
+.github-style-grid {
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 10px;
+    position: relative; /* Needed for absolute positioning */
+}
+
+/* Grid container */
+.grid-container {
+    display: flex;
+    margin-left: 40px; /* Space for day labels */
+}
+
+/* Day of week labels */
+.day-labels {
+    position: absolute;
+    left: 20px;
+    top: 50px; /* Align with grid cells */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.day-label {
+    height: 15px;
+    line-height: 15px;
+    text-align: right;
+    padding-right: 5px;
+    font-size: 12px;
+    color: #666;
+    width: 30px;
+}
+
+/* Month labels */
+.month-labels {
+    position: absolute;
+    top: 20px;
+    left: 60px; /* Align with grid cells */
+    display: flex;
+    width: calc(53 * 17px); /* Account for 53 columns plus gaps */
+    justify-content: space-between; /* Distribute months evenly */
+    padding-right: 15px; /* Add some padding on the right */
+}
+
+.month-label {
+    font-size: 12px;
+    color: #666;
+    /* Remove padding-right since we're using space-between */
+    flex: 0 0 auto; /* Don't grow or shrink */
+}
+
+/* Cells grid */
+.cells-grid {
+    display: grid;
+    grid-template-columns: repeat(53, 15px);
+    grid-template-rows: repeat(7, 15px);
+    gap: 2px;
+    margin-top: 30px; /* Space for month labels */
+}
+
+.grid-cell {
+    width: 15px;
+    height: 15px;
+    background-color: #ebedf0;
+    border-radius: 2px;
+}
+
+.grid-cell.completed {
+    background-color: #239a3b;
+}
+
+.grid-cell.empty {
+    background-color: transparent;
+}
 /* Responsive behavior (optional) */
 @media screen and (max-width: 768px) {
     form label {

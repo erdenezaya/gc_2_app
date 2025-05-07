@@ -114,5 +114,56 @@
                 </tbody>
             </table>
         </section>
+
+        <section class="profile-container" id="shared-habits-container">
+            <h2>Shared Habits from your friends</h2>
+            {% for item in shared_habits_data %}
+              <div class="shared-habit">
+                <strong>From: </strong> <span>{{ item.sharer.username }}</span><br>
+                <strong>Habit: </strong> <span>{{ item.habit.habit_name }}</span>
+                <div id="shared-habit-grid-{{ item.habit.id }}" class="github-style-grid" style="margin-bottom: 40px;"></div>
+              </div>
+            {% else %}
+              <p>No shared habits with you yet.</p>
+            {% endfor %}
+        </section>
     </main>
+    
+    <script src="{{ url_for('static', filename='js/yearly.js') }}"></script>
+    <script>
+        var sharedHabitsData = {{ shared_habits_data|tojson|safe }};
+        var year = new Date().getFullYear();
+        var colors = ['#4caf50', '#2196f3', '#ff9800', '#e91e63', '#9c27b0']; // 你可以自定义
+
+        // Move the transformation function outside the loop
+        function recordsArrayToMap(records) {
+            const map = {};
+            records.forEach(r => {
+                map[r.date] = {
+                    intensity: r.completed ? 1 : 0,
+                    notes: r.notes || ""
+                };
+            });
+            return map;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            for (var i = 0; i < sharedHabitsData.length; i++) {
+                var habit = sharedHabitsData[i].habit;
+
+                console.log("Habit ID:", habit.id);
+                var recordMap = recordsArrayToMap(sharedHabitsData[i].records); // transform here
+                var color = colors[i % colors.length];
+                var containerId = 'shared-habit-grid-' + habit.id;
+
+                const container = document.getElementById(containerId); 
+                console.log("Container ID:", containerId, "Exists?", !!container);
+                    if (container) {
+                    generateAnnualGrid(containerId, year, recordMap, color);
+                } else {
+                    console.warn("Missing container for:", containerId);
+                }
+            }
+        });
+    </script>
 {% endblock %}
