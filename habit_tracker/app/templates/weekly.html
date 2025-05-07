@@ -10,6 +10,7 @@
       <h4 class="text-center text-muted">{{ date_range }}</h4>
       <!-- Share Button -->
     <form id="share-form" action="{{ url_for('main.share_snippet') }}" method="POST" onsubmit="return setReceiverUsername()">
+      {{ csrf_token() }}
       <input type="hidden" id="receiver-username" name="receiver_username" value="">
       <input type="hidden" name="message" value="Today: {{ today_completion }} habits completed. Streak: {{ streak }} days! 🚀">
       <button type="button" class="nav-btn" data-toggle="modal" data-target="#usernameModal">Share</button>

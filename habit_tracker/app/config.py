@@ -8,7 +8,7 @@ class Config:
     Configuration class for the Flask application.
     """
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or default_database_location
-    SECRET_KEY = "amber_pearl_latte_is_the_best"
+    SECRET_KEY = os.getenv('SECRET_KEY', 'amber_pearl_latte_is_the_best')
 
 COLOR_PALETTE = [
     "#34BB61",  # green
