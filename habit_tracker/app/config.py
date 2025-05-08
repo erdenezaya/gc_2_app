@@ -4,11 +4,13 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 default_database_location = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 class Config:
-    """
-    Configuration class for the Flask application.
-    """
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or default_database_location
-    SECRET_KEY = os.getenv('SECRET_KEY', 'amber_pearl_latte_is_the_best')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+
+    if SECRET_KEY is None:
+        raise RuntimeError("SECRET_KEY environment variable not set! Please set it for security reasons.")
+
+    SQLALCHEMY_DATABASE_URI = default_database_location 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False 
 
 COLOR_PALETTE = [
     "#34BB61",  # green

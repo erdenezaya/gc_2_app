@@ -16,7 +16,6 @@ migrate = Migrate()
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
-
 def create_app() -> Flask:
     """Application factory"""
     app = Flask(__name__, static_folder="static")

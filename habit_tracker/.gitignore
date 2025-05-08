@@ -20,5 +20,7 @@ Thumbs.db
 *.log
 .cache/
 
+
 # App database
+
 app/app.db
