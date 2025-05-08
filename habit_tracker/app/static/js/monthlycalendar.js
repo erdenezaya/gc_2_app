@@ -1,125 +1,155 @@
-/* ----------------------- CONFIG ----------------------- */
+// Configuration
 
-/* ----------------------- HELPERS ---------------------- */
+
+// Helpers
 const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
 
 const pad = (n) => (n < 10 ? "0" + n : n);
-
-// Build a unique localStorage key for a particular habit/day
 const makeKey = (y, m, d, hIdx) => `${y}-${pad(m)}-${pad(d)}-${hIdx}`;
 
-/* ----------------------- STATE ------------------------ */
-let currentDate = new Date(); // Today (month-level navigation will mutate this)
+// State
 
-/* ---------------------- RENDERING --------------------- */
+
+// DOM Elements
+const monthLabel = document.getElementById('monthLabel');
+const calendarTable = document.getElementById('calendar');
+const prevMonthBtn = document.getElementById('prevMonth');
+const nextMonthBtn = document.getElementById('nextMonth');
+const shareBtn = document.getElementById('shareBtn');
+
+// Calendar Rendering
 function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
+    const today = new Date();
+    
+    // Update month label
+    monthLabel.textContent = currentDate.toLocaleString('default', { 
+        month: 'long', 
+        year: 'numeric' 
+    });
+
+    // Generate table structure
+    calendarTable.innerHTML = generateTableHTML(year, month, today);
+    
+    // Add event listeners
+    setupEventListeners();
+}
+
+function generateTableHTML(year, month, today) {
     const totalDays = daysInMonth(month, year);
-
-    // Header label
-    const monthLabel = document.getElementById("monthLabel");
-    monthLabel.textContent = currentDate.toLocaleString("default", {
-        month: "long",
-        year: "numeric",
-    });
-
-    // Table element
-    const tbl = document.getElementById("calendar");
-    tbl.innerHTML = ""; // Reset
-
-    /* ----------------- Build table header ---------------- */
-    const dowLabels = ["M", "T", "W", "T", "F", "S", "S"];
-
-    let headerRow1 = "<tr><th></th>";
-    let headerRow2 = "<tr><th></th>";
-
+    let html = '<thead><tr><th>Habits</th>';
+    
+    // Generate day headers
     for (let day = 1; day <= totalDays; day++) {
-        headerRow1 += `<th>${day}</th>`;
-
-        // JavaScript Date: 0 = Sunday, so adjust to make Monday first (0..6 -> 0..6)
-        const dow = (new Date(year, month, day).getDay() + 6) % 7;
-        headerRow2 += `<th>${dowLabels[dow]}</th>`;
+        const date = new Date(year, month, day);
+        html += `<th>${day}<div class="day-of-week">${getShortWeekday(date)}</div></th>`;
     }
-
-    headerRow1 += "</tr>";
-    headerRow2 += "</tr>";
-    tbl.insertAdjacentHTML("beforeend", `<thead>${headerRow1}${headerRow2}</thead>`);
-
-    /* ----------------- Build table body ------------------ */
-    let tbodyHtml = "<tbody>";
-
+    html += '</tr></thead><tbody>';
+    
+    // Generate habit rows
     habits.forEach((habit, hIdx) => {
-        tbodyHtml += `<tr><th class="text-start">${habit.name}</th>`;
+        html += `<tr><th>${habit.name}</th>`;
         for (let day = 1; day <= totalDays; day++) {
-            const key = makeKey(year, month + 1, day, hIdx);
-
-            const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
-
-            // ✅ Correct matching
-            const completion = habitCompletions.find(hc => hc.habit_id === habit.id && hc.date === dateStr);
-
-            // ✅ Debug only if a match is found
-            if (completion) {
-                console.log(`✅ Found Completion: Habit [${habit.name}] on [${dateStr}] Status: [${completion.status}]`);
-            }
-
-            let style = "";
-
-            if (completion) {
-                if (completion.status === "done") {
-                    style = `style="background:${habit.color};"`;  // Completed habit ➔ use habit's color
-                } else if (completion.status === "missed") {
-                    style = `style="background:#f8d7da;"`; // Missed habit ➔ light red color
-                }
-            }
-
-            tbodyHtml += `<td data-key="${key}" data-habit="${hIdx}" ${style}></td>`;
+            html += generateDayCell(year, month, day, hIdx, habit.color, today);
         }
-        tbodyHtml += "</tr>";
+        html += '</tr>';
     });
-
-    tbodyHtml += "</tbody>";
-    tbl.insertAdjacentHTML("beforeend", tbodyHtml);
-
-    /* ---------------- Cell click handlers --------------- */
-    tbl.querySelectorAll("td").forEach((cell) => {
-        cell.addEventListener("click", () => {
-            const key = cell.dataset.key;
-            const hIdx = parseInt(cell.dataset.habit, 10);
-            const habitColor = habits[hIdx].color || "#ccc";
     
-            const wasDone = cell.classList.contains('completed');
+    return html + '</tbody>';
+}
+
+function generateDayCell(year, month, day, hIdx, color, today) {
+    const key = makeKey(year, month + 1, day, hIdx);
+    const done = localStorage.getItem(key) === "1";
+    const isToday = isCurrentDay(year, month, day, today);
     
-            if (wasDone) {
-                cell.style.backgroundColor = "";
-                cell.classList.remove('completed');
-                localStorage.removeItem(key);
-            } else {
-                cell.style.backgroundColor = habitColor;
-                cell.classList.add('completed');
-                localStorage.setItem(key, "1");
+    let classes = [];
+    if (done) classes.push('completed');
+    if (isToday) classes.push('today');
+    
+    return `<td data-key="${key}" data-habit="${hIdx}" 
+            ${done ? `style="background:${color}"` : ''}
+            ${classes.length ? `class="${classes.join(' ')}"` : ''}></td>`;
+}
+
+
+// Helpers
+function getShortWeekday(date) {
+    return ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
+}
+
+function isCurrentDay(year, month, day, today) {
+    return year === today.getFullYear() && 
+           month === today.getMonth() && 
+           day === today.getDate();
+}
+
+// Event Handlers
+function setupEventListeners() {
+    calendarTable.querySelectorAll('td').forEach(cell => {
+        cell.addEventListener('click', handleCellClick);
+        cell.addEventListener('mouseenter', () => {
+            if (!cell.classList.contains('completed')) {
+                cell.style.backgroundColor = '#f8fafc';
+            }
+        });
+        cell.addEventListener('mouseleave', () => {
+            if (!cell.classList.contains('completed')) {
+                cell.style.backgroundColor = '';
+
             }
         });
     });
     
 
-/* ------------------ Navigation buttons ---------------- */
-document.getElementById("prevMonth").addEventListener("click", () => {
+function handleCellClick() {
+    const key = this.dataset.key;
+    const hIdx = parseInt(this.dataset.habit, 10);
+    const habitColor = habits[hIdx].color;
+    
+    if (this.classList.contains('completed')) {
+        this.style.backgroundColor = '';
+        this.classList.remove('completed');
+        localStorage.removeItem(key);
+    } else {
+        this.style.backgroundColor = habitColor;
+        this.classList.add('completed');
+        localStorage.setItem(key, "1");
+        
+        // Add subtle animation
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 200);
+    }
+}
+
+// Navigation
+prevMonthBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar();
 });
 
-document.getElementById("nextMonth").addEventListener("click", () => {
+nextMonthBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar();
 });
 
-/* --------------- Share button placeholder -------------- */
-document.getElementById("shareBtn").addEventListener("click", () => {
-    // For now we simply alert; you can replace with image export / share logic
-    alert("Share functionality coming soon! 🥳");
+// Share Button
+shareBtn.addEventListener('click', async () => {
+    shareBtn.disabled = true;
+    shareBtn.textContent = 'Generating...';
+    
+    try {
+        // Simulate share preparation
+        await new Promise(resolve => setTimeout(resolve, 800));
+        alert('Share functionality coming in next update!');
+    } finally {
+        shareBtn.disabled = false;
+        shareBtn.textContent = 'Share';
+    }
 });
 
-// Initial render on page load
-renderCalendar();
+// Initial render
+document.addEventListener('DOMContentLoaded', renderCalendar);

@@ -4,18 +4,28 @@
 
 {% block head_extra %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/monthlycalendar.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-{% include "calendar_component.html" %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Monthly Progress</h1>
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+        </a>
+    </div>
+    
+    {% include "calendar_component.html" %}
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  const habits = {{ habits | tojson }};
-</script>
-<script>
-  const habitCompletions = {{ habit_completions | default([]) |  tojson }};
+    // Pass server-side data to frontend
+    const habits = {{ habits | tojson | safe }};
+    const habitCompletions = {{ habit_completions | tojson | safe }};
+    const currentDate = new Date("{{ current_date }}");
 </script>
 <script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
 {% endblock %}

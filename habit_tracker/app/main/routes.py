@@ -256,7 +256,24 @@ def weekly():
 @login_required
 def monthly():
     """Render the monthly habits view"""
+
     habit_objs = Habit.query.filter_by(user_id=current_user.id).all()
+
+    # Get current user's habits
+    habit_objs = Habit.query.filter_by(user_id=current_user.id).all()
+
+    colors = ["#48bb78", "#4299e1", "#9f7aea", "#ed8936", "#f6ad55"]  # Example colors
+
+    habits = []
+    for idx, h in enumerate(habit_objs):
+        habit_dict = {
+            "id": h.id,
+            "name": h.habit_name,
+            "color": colors[idx % len(colors)]  # Assign color by index
+        }
+        habits.append(habit_dict)
+
+
 
     colors = ["#48bb78", "#4299e1", "#9f7aea", "#ed8936", "#f6ad55"]
 
@@ -288,6 +305,12 @@ def monthly():
     ]
 
 
+
+    from datetime import datetime  # Add this at the top if not already present
+
+    current_date = datetime.today().isoformat()
+
+
     return render_template(
         "monthly.html",
         active_page="monthly",
@@ -298,6 +321,11 @@ def monthly():
         current_date=current_date
 
         progress_gradient=PROGRESS_BAR_GRADIENT,
+
+
+
+        habit_completions=habit_completions,
+        current_date=current_date 
 
 
     )

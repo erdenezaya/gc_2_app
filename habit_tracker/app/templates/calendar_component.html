@@ -1,83 +1,76 @@
-<!-- templates/calendar_component.html -->
-
-<div class="calendar my-4">
-  <!-- Month navigator & share -->
-  <div class="month-navigation">
-    <span id="prevMonth" class="month-nav">&lt;</span>
-    <h2 id="monthLabel" class="m-0"></h2>
-    <span id="nextMonth" class="month-nav">&gt;</span>
-    <button id="shareBtn" class="btn btn-outline-dark">Share</button>
-  </div>
-
-
-  <!-- Calendar table -->
-  <div class="table-responsive">
-    <table id="calendar" class="table table-bordered align-middle text-center mb-0"></table>
-  </div>
-
-  <!-- Color Legend -->
-  <div class="legend">
-      <div class="legend-item">
-          <div class="legend-color" style="background:#4caf50;"></div> Done
-      </div>
-      <div class="legend-item">
-          <div class="legend-color" style="background:#f8d7da;"></div> Missed
-      </div>
-  </div>
-</div>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/monthlycalendar.css') }}">
 
-<div class="calendar my-4">
-    <!-- Month navigator & share -->
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-3">
-            <span id="prevMonth" class="month-nav">&lt;</span>
-            <h2 id="monthLabel" class="m-0 fs-4"></h2>
-            <span id="nextMonth" class="month-nav">&gt;</span>
+<!-- templates/calendar_component.html -->
+<div class="calendar-container">
+    <div class="calendar">
+        <!-- Calendar Header -->
+        <div class="calendar-header">
+            <div class="month-navigation">
+                <button id="prevMonth" class="month-nav" aria-label="Previous month">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2 id="monthLabel" class="month-title">May 2025</h2>
+                <button id="nextMonth" class="month-nav" aria-label="Next month">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="calendar-actions">
+                <button id="todayBtn" class="btn btn-sm btn-outline-primary mr-2">
+                    <i class="fas fa-calendar-day mr-1"></i> Today
+                </button>
+                <button id="shareBtn" class="btn btn-primary">
+                    <i class="fas fa-share-alt mr-2"></i> Share
+                </button>
+            </div>
         </div>
-        <button id="shareBtn" class="btn btn-outline-primary btn-sm">Share</button>
-    </div>
 
-    <!-- NEW: Habit Legend -->
-    <div class="habit-legend">
-        <span><span class="legend-color" style="background:#4caf50"></span> Wake up early</span>
-        <span><span class="legend-color" style="background:#f44336"></span> Drink water</span>
-        <span><span class="legend-color" style="background:#2196f3"></span> No takeout</span>
-        <span><span class="legend-color" style="background:#9c27b0"></span> Meditate</span>
-    </div>
+        <!-- Habit Legend -->
+        <div class="habit-legend">
+            <span class="legend-title font-weight-bold">Habits:</span>
+            {% for habit in habits %}
+            <div class="legend-item">
+                <span class="legend-color" style="background:{{ habit.color }}"></span>
+                <span>{{ habit.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
 
-    <!-- Calendar Table -->
-    <div class="table-responsive">
-        <table id="calendar" class="table-calendar"></table>
+        <!-- Calendar Grid -->
+        <div class="table-responsive">
+            <table id="calendar" class="table-calendar" aria-label="Monthly habit tracker">
+                <thead>
+                    <tr>
+                        <th class="habit-column">Habit</th>
+                        <!-- Days will be inserted by JavaScript -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be inserted by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="stats-summary mt-4 p-3 bg-light rounded">
+            <div class="row text-center">
+                <div class="col">
+                    <div class="stat-value" id="completedDays">0</div>
+                    <div class="stat-label">Days Completed</div>
+                </div>
+                <div class="col">
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="col">
+                    <div class="stat-value" id="completionRate">0%</div>
+                    <div class="stat-label">Monthly Goal</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
 
 <script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
-
-<div class="calendar my-4">
-  <!-- Month navigator & share -->
-  <div class="month-navigation">
-    <span id="prevMonth" class="month-nav">&lt;</span>
-    <h2 id="monthLabel" class="m-0"></h2>
-    <span id="nextMonth" class="month-nav">&gt;</span>
-    <button id="shareBtn" class="btn btn-outline-dark">Share</button>
-  </div>
-
-
-  <!-- Calendar table -->
-  <div class="table-responsive">
-    <table id="calendar" class="table table-bordered align-middle text-center mb-0"></table>
-  </div>
-
-  <!-- Color Legend -->
-  <div class="legend">
-      <div class="legend-item">
-          <div class="legend-color" style="background:#4caf50;"></div> Done
-      </div>
-      <div class="legend-item">
-          <div class="legend-color" style="background:#f8d7da;"></div> Missed
-      </div>
-  </div>
-</div>
 
