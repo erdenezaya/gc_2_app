@@ -17,6 +17,7 @@
     </div>
     
     {% include "calendar_component.html" %}
+
 </div>
 {% endblock %}
 
@@ -28,4 +29,9 @@
     const currentDate = new Date("{{ current_date }}");
 </script>
 <script src="{{ url_for('static', filename='js/monthlycalendar.js') }}"></script>
+
+
+    <!-- Modal for share button -->
+    {% include 'share_modal.html' %}
+
 {% endblock %}
