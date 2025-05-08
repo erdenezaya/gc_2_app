@@ -181,12 +181,13 @@ function saveHabitStatuses(selectedDate) {
         completed: checkbox.checked
     }));
 
-    // Send the updated statuses to the backend
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     fetch(`/save_habit_statuses`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Requested-With": "XMLHttpRequest"
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": csrfToken
       },
       body: JSON.stringify({ date: selectedDate, habits: habitStatuses })
     })
