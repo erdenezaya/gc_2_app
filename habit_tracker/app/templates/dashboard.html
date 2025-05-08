@@ -29,14 +29,14 @@
             <div class="habit-item">
                 <!-- Habit checkbox and label -->
                 <form action="{{ url_for('main.toggle_habit', habit_id=habit.id) }}" method="POST" class="toggle-form">
-                    {{ csrf_token() }}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="checkbox" id="habit{{ habit.id }}" {% if habit.completed %}checked{% endif %} onchange="this.form.submit()">
                     <label for="habit{{ habit.id }}">{{ habit.name }}</label>
                 </form>
                 
                 <!-- Delete habit button -->
                 <form action="{{ url_for('main.delete_habit', habit_id=habit.id) }}" method="POST" style="display:inline;">
-                    {{ csrf_token() }}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this habit?');">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -46,7 +46,7 @@
             </div>
             <!-- Add new habit form -->
             <form action="{{ url_for('main.create_habit') }}" method="POST" class="add-habit-form" style="display: flex; justify-content: space-between; align-items: center;">
-                {{ csrf_token() }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input id="input-field" type="text" name="habit_name" placeholder="New habit name" required style="flex: 1; margin-right: 10px;">
                 <button type="submit" class="add-habit-btn">add</button>
             </form>

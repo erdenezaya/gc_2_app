@@ -41,7 +41,7 @@
 
         <section class="profile-container">
             <form action="/update_username" method="POST">
-                {{ csrf_token() }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label for="new-username">New Username:</label>
                 <input type="text" id="new-username" name="new_username" required>
                 <button type="submit">Update Username</button>
@@ -56,7 +56,7 @@
                 {% endwith %}
             </form>
             <form action="/update_email" method="POST">
-                {{ csrf_token() }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label for="new-email">New Email:</label>
                 <input type="email" id="new-email" name="new_email" required>
                 <button type="submit">Update Email</button>
@@ -73,7 +73,7 @@
 
             </form>
             <form action="/update_password" method="POST">
-                {{ csrf_token() }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <label for="current-password">Current Password:</label>
                 <input type="password" id="current-password" name="current_password" required>
                 <label for="new-password">New Password:</label>

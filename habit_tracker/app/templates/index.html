@@ -28,7 +28,7 @@
       <div class="form-content">
         <button class="close-btn form-btn" onclick="closeLoginForm()">×</button>
         <form method="POST" action="{{ url_for('auth.login') }}">
-          {{ csrf_token() }}
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <label>Username:</label>
           <input type="text" name="username" required>
           <label>Password:</label>
@@ -64,7 +64,7 @@
           <div class="form-content">
             <button class="close-btn form-btn" onclick="closeSignupForm()">×</button>
             <form method="POST" action="{{ url_for('auth.signup') }}">
-              {{ csrf_token() }}
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
               <label>Username:</label>
               <input type="text" name="username" required>
               <label>Email:</label>
