@@ -1,113 +1,163 @@
-/* ----------------------- CONFIG ----------------------- */
-let habits = [];
-
-const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-/* ----------------------- HELPERS ---------------------- */
+// Helpers
 const daysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
-
 const pad = (n) => (n < 10 ? "0" + n : n);
-
-// Build a unique localStorage key for a particular habit/day
 const makeKey = (y, m, d, hIdx) => `${y}-${pad(m)}-${pad(d)}-${hIdx}`;
 
-/* ----------------------- STATE ------------------------ */
-let currentDate = new Date(); // Today (month-level navigation will mutate this)
+// DOM Elements
+const monthLabel = document.getElementById('monthLabel');
+const calendarTable = document.getElementById('calendar');
+const prevMonthBtn = document.getElementById('prevMonth');
+const nextMonthBtn = document.getElementById('nextMonth');
+const shareBtn = document.getElementById('shareBtn');
+const todayBtn = document.getElementById('todayBtn');
 
-/* ---------------------- RENDERING --------------------- */
-function fetchAndRenderCalendar() {
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1;
-    fetch(`/api/monthly_habits?year=${year}&month=${month}`)
-        .then(response => response.json())
-        .then(data => {
-            habits = data;
-            renderCalendar();
-        });
-}
-
+// Calendar Rendering
 function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
+    const today = new Date();
+
+    // Update month label
+    monthLabel.textContent = currentDate.toLocaleString('default', {
+        month: 'long',
+        year: 'numeric'
+    });
+
+    // Generate table structure
+    calendarTable.innerHTML = generateTableHTML(year, month, today);
+
+    // Add event listeners
+    setupEventListeners();
+
+    // Update stats
+    updateStats();
+}
+
+function generateTableHTML(year, month, today) {
     const totalDays = daysInMonth(month, year);
-
-    // Table element
-    let tbl = document.getElementById("calendar");
-    tbl.innerHTML = ""; // Reset
-
-    /* ----------------- Build table header ---------------- */
-    const dowLabels = ["M", "T", "W", "T", "F", "S", "S"];
-
-    let headerRow1 = "<tr><th></th>";
-    let headerRow2 = "<tr><th></th>";
+    let html = '<thead><tr><th>Habits</th>';
 
     for (let day = 1; day <= totalDays; day++) {
-        headerRow1 += `<th>${day}</th>`;
-
-        // JavaScript Date: 0 = Sunday, so adjust to make Monday first (0..6 -> 0..6)
-        const dow = (new Date(year, month, day).getDay() + 6) % 7;
-        headerRow2 += `<th>${dowLabels[dow]}</th>`;
+        const date = new Date(year, month, day);
+        html += `<th>${day}<div class="day-of-week">${getShortWeekday(date)}</div></th>`;
     }
 
-    headerRow1 += "</tr>";
-    headerRow2 += "</tr>";
-    tbl.insertAdjacentHTML("beforeend", `<thead>${headerRow1}${headerRow2}</thead>`);
-
-    /* ----------------- Build table body ------------------ */
-    let tbodyHtml = "<tbody>";
+    html += '</tr></thead><tbody>';
 
     habits.forEach((habit, hIdx) => {
-        tbodyHtml += `<tr><th class="text-start">${habit.name}</th>`;
+        html += `<tr><th>${habit.name}</th>`;
         for (let day = 1; day <= totalDays; day++) {
-            const dayData = habit.days[day - 1];
-            const style = dayData.completed ? `style="background:${habit.color};"` : "";
-            tbodyHtml += `<td data-habit="${hIdx}" data-day="${day}" ${style}></td>`;
+            html += generateDayCell(year, month, day, hIdx, habit.color, today);
         }
-        tbodyHtml += "</tr>";
+        html += '</tr>';
     });
 
-    tbodyHtml += "</tbody>";
-    tbl.insertAdjacentHTML("beforeend", tbodyHtml);
+    return html + '</tbody>';
 }
 
-function initMonthYearSelectors() {
-    const monthSelect = document.getElementById("monthSelect");
-    const yearSelect = document.getElementById("yearSelect");
-    monthSelect.innerHTML = "";
-    yearSelect.innerHTML = "";
+function generateDayCell(year, month, day, hIdx, color, today) {
+    const key = makeKey(year, month + 1, day, hIdx);
+    const done = localStorage.getItem(key) === "1";
+    const isToday = isCurrentDay(year, month, day, today);
 
-    monthNames.forEach((name, idx) => {
-        const option = document.createElement("option");
-        option.value = idx;
-        option.text = name;
-        monthSelect.appendChild(option);
+    let classes = [];
+    if (done) classes.push('completed');
+    if (isToday) classes.push('today');
+
+    return `<td data-key="${key}" data-habit="${hIdx}"
+            ${done ? `style="background:${color}"` : ''}
+            ${classes.length ? `class="${classes.join(' ')}"` : ''}></td>`;
+}
+
+function getShortWeekday(date) {
+    return ['S', 'M', 'T', 'W', 'T', 'F', 'S'][date.getDay()];
+}
+
+function isCurrentDay(year, month, day, today) {
+    return year === today.getFullYear() &&
+        month === today.getMonth() &&
+        day === today.getDate();
+}
+
+function setupEventListeners() {
+    calendarTable.querySelectorAll('td').forEach(cell => {
+        cell.addEventListener('click', handleCellClick);
+        cell.addEventListener('mouseenter', () => {
+            if (!cell.classList.contains('completed')) {
+                cell.style.backgroundColor = '#f8fafc';
+            }
+        });
+        cell.addEventListener('mouseleave', () => {
+            if (!cell.classList.contains('completed')) {
+                cell.style.backgroundColor = '';
+            }
+        });
     });
+}
 
-    const currentYear = new Date().getFullYear();
-    for (let y = currentYear - 2; y <= currentYear + 2; y++) {
-        const option = document.createElement("option");
-        option.value = y;
-        option.text = y;
-        yearSelect.appendChild(option);
+function handleCellClick() {
+    const key = this.dataset.key;
+    const hIdx = parseInt(this.dataset.habit, 10);
+    const habitColor = habits[hIdx].color;
+
+    if (this.classList.contains('completed')) {
+        this.style.backgroundColor = '';
+        this.classList.remove('completed');
+        localStorage.removeItem(key);
+    } else {
+        this.style.backgroundColor = habitColor;
+        this.classList.add('completed');
+        localStorage.setItem(key, "1");
+
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 200);
     }
 
-    monthSelect.value = currentDate.getMonth();
-    yearSelect.value = currentDate.getFullYear();
-
-    monthSelect.addEventListener("change", () => {
-        currentDate.setMonth(parseInt(monthSelect.value));
-        fetchAndRenderCalendar();
-    });
-    yearSelect.addEventListener("change", () => {
-        currentDate.setFullYear(parseInt(yearSelect.value));
-        fetchAndRenderCalendar();
-    });
+    updateStats();  // Live update after each click
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    initMonthYearSelectors();
-    fetchAndRenderCalendar();
+function updateStats() {
+    const allCells = calendarTable.querySelectorAll('td[data-key]');
+    const completed = [...allCells].filter(td => td.classList.contains('completed')).length;
+    const total = allCells.length;
+    const rate = total ? Math.round((completed / total) * 100) : 0;
+
+    document.getElementById('completedDays').textContent = completed;
+    document.getElementById('completionRate').textContent = rate + '%';
+    document.getElementById('currentStreak').textContent = 0;
+}
+
+// Navigation
+prevMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
 });
+
+nextMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+});
+
+todayBtn.addEventListener('click', () => {
+    currentDate = new Date();
+    renderCalendar();
+});
+
+// Share Button
+shareBtn.addEventListener('click', async () => {
+    shareBtn.disabled = true;
+    shareBtn.textContent = 'Generating...';
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 800));
+        alert('Share functionality coming in next update!');
+    } finally {
+        shareBtn.disabled = false;
+        shareBtn.textContent = 'Share';
+    }
+});
+
+// Initial Render
+document.addEventListener('DOMContentLoaded', renderCalendar);

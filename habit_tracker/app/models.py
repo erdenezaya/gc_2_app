@@ -34,6 +34,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+
 class Habit(db.Model):
     __tablename__ = 'habits'
 
@@ -43,6 +44,19 @@ class Habit(db.Model):
 
     records = db.relationship('HabitRecord', backref='habit', lazy=True, 
                              cascade='all, delete-orphan')
+    
+    
+
+    def to_dict(self):
+        from app.main.controller import get_habit_color  # ✅ lazy import to avoid circular dependency
+        return {
+            "id": self.id,
+            "name": self.habit_name,
+            "color": get_habit_color(self.id),
+            "user_id": self.user_id
+        }
+
+
 
 class HabitRecord(db.Model):
     __tablename__ = 'habit_records'

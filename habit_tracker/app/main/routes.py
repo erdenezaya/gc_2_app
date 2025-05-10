@@ -8,6 +8,8 @@ from . import main_bp
 from .controller import create_default_habits, get_habit_color, calculate_streak, get_weekly_completion
 from app.config import COLOR_PALETTE, COLOR_GRADIENTS, PROGRESS_BAR_GRADIENT
 from calendar import monthrange
+from datetime import datetime
+
 
 
 # ------------------------------------------------------------------
@@ -138,12 +140,17 @@ def weekly():
         form=form,
     )
 
+from app.main.controller import get_habit_color  # ✅ Do it here only
+
 @main_bp.route("/monthly")
 @login_required
 def monthly():
     """Render the monthly habits view"""
     # Get current user's habits
     habits = Habit.query.filter_by(user_id=current_user.id).all()
+    habit_data = [h.to_dict() for h in habits]  # <-- convert for JSON
+    habit_completions = []  # Temporary placeholder for now
+
 
     # Calculate streak
     streak = calculate_streak(current_user.id)
@@ -156,11 +163,15 @@ def monthly():
     return render_template(
         "monthly.html",
         active_page="monthly",
-        habits=habits,
+        habits=habit_data,
+        habit_completions=habit_completions,  # <-- add this
         streak=streak,
         progress_gradient=PROGRESS_BAR_GRADIENT,
         form=form,
         colors=COLOR_PALETTE,
+        current_date=datetime.now().strftime("%Y-%m-%d")  # required by JS
+
+        
     )
 
 @main_bp.route("/yearly")

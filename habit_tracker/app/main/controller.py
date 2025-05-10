@@ -28,12 +28,15 @@ def create_default_habits(user_id):
     
     db.session.commit()
 
-def get_habit_color(habit_name):
-    _last_color_index = -1
-    """Return the CSS color class based on habit name"""
-    colors = ["green", "red", "blue", "purple"]
-    _last_color_index = (_last_color_index + 1) % 4
-    return colors[_last_color_index]
+# Assign color deterministically based on habit ID
+COLOR_PALETTE = [
+    "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0",
+    "#9966FF", "#FF9F40", "#00C49F", "#FF4444"
+]
+
+def get_habit_color(habit_id):
+    return COLOR_PALETTE[habit_id % len(COLOR_PALETTE)]
+
 
 def calculate_streak(user_id):
     """Calculate current streak for a user based on all habits being completed.
