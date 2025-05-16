@@ -122,6 +122,17 @@ cd habit_tracker
 python scripts/seed.py
 ```
 
+##  Unit Testing, Selenium testing instructions
+
+1. For **Unit testing**, run following command from the root directory:
+- `$ python -m pytest -q`  
+
+2. For **Selenium testing**, run the following commands from root directory:
+- `$ python -m unittest systemTests.py` 
+- `$ python -m unittest sanityTests.py` 
+
+
+
 ## Team Members
 
 | Name                    | UWA ID     | GitHub Username  |
