@@ -20,3 +20,9 @@ google-api-python-client
 
 # If you use requests or other common packages, add them as needed
 requests
+
+# For testing
+pytest
+selenium
+webdriver-manager
+pytest-flask
